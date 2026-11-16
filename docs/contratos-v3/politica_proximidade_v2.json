@@ -1,0 +1,130 @@
+{
+  "politica": "proximidade",
+  "versao": 1,
+  "natureza": "Regra de produto exploratória sobre o mapa histórico observado (jan–set/2026). Demonstração retrospectiva, não validada como alerta para pessoas; test_seen=true. Alerta por proximidade: não garante distância nem antecedência mínima até a célula elegível.",
+  "test_seen": true,
+  "snapshot_csv": "ml/dados/snapshot/risco_h3_faixa_v2.csv",
+  "snapshot_csv_sha256": "2dddef701bdecb65142874980f1ae5aba7b2ac6ab2abad5c47b07f07ecc5080a",
+  "contrato_snapshot_versao": 2,
+  "L": 3,
+  "k_anel": 1,
+  "cooldown_min": 30,
+  "fuso": "America/Sao_Paulo",
+  "faixas": [
+    {
+      "faixa": 0,
+      "faixa_nome": "madrugada",
+      "inicio_min": 0,
+      "fim_min": 360
+    },
+    {
+      "faixa": 1,
+      "faixa_nome": "manha",
+      "inicio_min": 360,
+      "fim_min": 720
+    },
+    {
+      "faixa": 2,
+      "faixa_nome": "tarde",
+      "inicio_min": 720,
+      "fim_min": 1080
+    },
+    {
+      "faixa": 3,
+      "faixa_nome": "noite_cedo",
+      "inicio_min": 1080,
+      "fim_min": 1260
+    },
+    {
+      "faixa": 4,
+      "faixa_nome": "noite",
+      "inicio_min": 1260,
+      "fim_min": 1440
+    }
+  ],
+  "regra": [
+    "Avaliar a cada atualização de posição do aparelho e também na troca de faixa horária.",
+    "Faixa vigente = hora local do aparelho convertida para America/Sao_Paulo, bordas [início, fim) do contrato v2.",
+    "Célula elegível = chave (h3_cell, faixa vigente) com status com_dado e nivel >= L.",
+    "Dispara se alguma célula de grid_disk(célula atual, k_anel) for elegível (anel completo, sem direção).",
+    "Cada célula elegível dispara no máximo uma vez a cada cooldown_min minutos.",
+    "Chave sem_dado nunca dispara e nunca é exibida como segura; na consulta mostra 'dados insuficientes para exibição'.",
+    "Se snapshot_csv_sha256 não bater com o snapshot carregado, a política não alerta e registra o erro."
+  ],
+  "texto_alerta": "Área próxima com muitas ocorrências registradas (jan–set/2026)",
+  "texto_sem_dado": "dados insuficientes para exibição",
+  "nao_afirma": [
+    "distância ou antecedência mínima",
+    "segurança de qualquer área",
+    "tempo real",
+    "orçamento de alertas em trajetos (fase 2)"
+  ],
+  "tabela_por_L": [
+    {
+      "L": 1,
+      "chaves_elegiveis": 682,
+      "chaves_com_dado": 954,
+      "fracao_chaves_com_dado": 0.714885,
+      "fracao_pontuacao": 0.947789
+    },
+    {
+      "L": 2,
+      "chaves_elegiveis": 475,
+      "chaves_com_dado": 954,
+      "fracao_chaves_com_dado": 0.497904,
+      "fracao_pontuacao": 0.85323
+    },
+    {
+      "L": 3,
+      "chaves_elegiveis": 200,
+      "chaves_com_dado": 954,
+      "fracao_chaves_com_dado": 0.209644,
+      "fracao_pontuacao": 0.57401
+    }
+  ],
+  "tabela_rotulo": "frações de chaves históricas (retrospectiva, test_seen=true); não é orçamento de área nem de alertas",
+  "cobertura_anel_por_faixa": [
+    {
+      "faixa": 0,
+      "faixa_nome": "madrugada",
+      "celulas_que_disparam": 47,
+      "celulas_snapshot": 279,
+      "fracao": 0.168459
+    },
+    {
+      "faixa": 1,
+      "faixa_nome": "manha",
+      "celulas_que_disparam": 91,
+      "celulas_snapshot": 279,
+      "fracao": 0.326165
+    },
+    {
+      "faixa": 2,
+      "faixa_nome": "tarde",
+      "celulas_que_disparam": 138,
+      "celulas_snapshot": 279,
+      "fracao": 0.494624
+    },
+    {
+      "faixa": 3,
+      "faixa_nome": "noite_cedo",
+      "celulas_que_disparam": 172,
+      "celulas_snapshot": 279,
+      "fracao": 0.616487
+    },
+    {
+      "faixa": 4,
+      "faixa_nome": "noite",
+      "celulas_que_disparam": 108,
+      "celulas_snapshot": 279,
+      "fracao": 0.387097
+    }
+  ],
+  "sensibilidade_p90": {
+    "p90_pontuacao_mensal": 1.957407,
+    "chaves": 96,
+    "fracao_chaves_com_dado": 0.100629,
+    "fracao_pontuacao": 0.366088,
+    "uso": "somente registro; não altera a regra"
+  }
+}

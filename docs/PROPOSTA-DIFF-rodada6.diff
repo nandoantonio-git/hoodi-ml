@@ -1,0 +1,60 @@
+--- a/specs/001-risco-h3-faixa-horaria/spec.md	2026-11-13 09:45:53
++++ specs/001-risco-h3-faixa-horaria/spec.md	2026-11-13 09:49:07
+@@ -107,7 +107,7 @@
+ - **FR-007**: O sistema MUST representar "sem dado" fora da escala 0–3.
+ - **FR-008**: O sistema MUST mostrar a distribuição real dos níveis ao Nando antes de aplicar o rótulo.
+ - **FR-009**: O sistema MUST dividir treino (jan–jul) e teste (ago–set) por tempo, usando a data do fato (registros com fato fora de jan–set 2026 ficam fora da modelagem e são contados como "fora da janela") e usar validação cruzada só no treino. O backtest é **retrospectivo**: o split pela data do fato, a construção das features e o ajuste das transformações apenas no treino de cada dobra controlam o vazamento temporal (plan.md, princípio V), mas não prova que o dado já existia na origem na época (só há o arquivo atualizado em 28/10/2026). O relatório não afirma "ausência de vazamento". Ago–set é **avaliação exploratória**: a distribuição do teste foi vista na aprovação do T017, e cortes, pesos e critério já estavam fixados só com o treino e não mudaram depois. O alvo é o nível da chave em ago–set; as features de qualquer exemplo MUST usar apenas registros anteriores ao período do seu rótulo, e o rótulo de teste MUST vir só de registros de ago–set. Na validação cruzada, o treino de cada dobra MUST usar só origens cujo rótulo termina antes do início do rótulo validado (validação com expurgo, sem sobreposição de rótulo).
+-- **FR-010**: O sistema MUST comparar com uma linha de base simples, avaliar ao menos 10 combinações de 3 hiperparâmetros e justificar o modelo escolhido entre XGBoost, RF, MLP, LSTM e KMeans+PCA. Executados: RF, XGBoost e MLP; LSTM e KMeans+PCA são declarados "não executados" com justificativa, sujeito à confirmação do Nando (research D-06).
++- **FR-010**: O sistema MUST comparar com uma linha de base simples, avaliar ao menos 10 combinações de 3 hiperparâmetros e justificar o modelo escolhido entre XGBoost, RF, MLP, LSTM e KMeans+PCA. Planejados (T025 aberto): RF, XGBoost e MLP; LSTM e KMeans+PCA são declarados "não executados" com justificativa, sujeito à confirmação do Nando (research D-06).
+ - **FR-011**: O sistema MUST gerar snapshot versionado com checksum e uma fixture para o contrato com o Abner.
+ - **FR-012**: O relatório MUST conter apenas números rastreáveis a execuções reais e MUST evitar "tempo real" e "rota/local seguro".
+ - **FR-013**: O sistema MUST NOT conter, nos derivados e nas entregas, campo que identifique pessoa (constituição VII, v1.2.0; inventário por camada em `ml/dados/README.md`); raw e interim ficam fora do git e sem entrega; nada é enviado ou publicado sem confirmação do Nando.
+--- a/specs/001-risco-h3-faixa-horaria/tasks.md	2026-11-13 09:45:53
++++ specs/001-risco-h3-faixa-horaria/tasks.md	2026-11-13 09:49:07
+@@ -72,7 +72,7 @@
+ 
+ **Goal**: modelo escolhido com justificativa, contra linhas de base, com treino e teste lado a lado.
+ 
+-**Independent Test**: nenhum registro de ago–set entra nas features de teste (SC-003) e todo número do relatório vem de execução.
++**Independent Test**: nenhum registro de ago–set entra nas features de teste, as datas das features são estritamente anteriores ao início do rótulo e as transformações são ajustadas só no treino da dobra (SC-003, T021) e todo número do relatório vem de execução.
+ 
+ ### Testes primeiro
+ - [ ] T021 [P] [US3] `tests/test_split_temporal.py`: para T1 a T4 e Teste, `data_feature < inicio_rotulo` (estritamente anterior); transformações ajustadas só no treino da dobra; features passadas invariantes a alterações dos registros futuros; na CV com expurgo, nenhuma origem de treino tem rótulo que toque o mês do rótulo validado; o rótulo de teste vem só de ago–set; nenhuma data de teste anterior à última de treino (SC-003, FR-009)
+@@ -90,7 +90,7 @@
+ 
+ ## Phase 6: US4 — Entrega auditável (P2)
+ 
+-**Goal**: repositório, notebook executado, relatório e prompts, com red-team real antes da entrega final; cada envio intermediário (T020a/T020b: contrato e fixture ao Abner) é coberto pelo red-team da rodada vigente do contrato, e todo envio, sempre com a confirmação do Nando.
++**Goal**: repositório, notebook executado, relatório e prompts, com red-team real antes da entrega final; cada envio intermediário (T020a/T020b: contrato e fixture ao Abner) é coberto apenas pela rodada vigente do próprio artefato e versão enviados (o contrato pela rodada da spec; a fixture só após revisão própria, ou, não havendo, pela confirmação humana), e todo envio, sempre com a confirmação do Nando.
+ 
+ **Independent Test**: lista A1 a A6 de `docs/SPEC-ML.md` §7 conferida e relatório real do Codex CLI anexado.
+ 
+@@ -98,7 +98,7 @@
+ - [ ] T030 [P] [US4] `ml/dados/README.md`: fonte oficial SSP-SP, nome do arquivo, sha256, descrição dos campos, destinos e quarentena, janela de dados, perímetro e a reconciliação de T011 (A2); inventário de privacidade por camada (conteúdo, acesso, retenção e descarte, incluindo logs, notebook e prompts) e teste `tests/test_schemas_derivados.py` que lê os parquets derivados reais e falha se houver `bo_id`, `NUM_BO`, endereço, bairro, delegacia, `lat`, `lon`, `latitude` ou `longitude` em `processed/` (inventariar e regenerar `usadas.parquet`, que hoje contém `lat` e `lon`); sensibilidade do centro do perímetro (deslocar ±100 m e contar as células cujo nível muda)
+ - [ ] T031 [P] [US4] Atualizar `prompts.md` com uma entrada datada por sessão de trabalho (A5), resumindo o prompt e o uso do resultado
+ - [ ] T032 [P] [US4] [Nando] `README.md` com a Ficha da CitizenTech e os ODS (A4): pedir a ele o conteúdo da Ficha e dos ODS já em 2026-11-12, sem esperar o final, que não estão em nenhum arquivo do projeto, e não inventar
+-- [ ] T033 [US4] `RELATORIO_ML.md` de 2 a 4 páginas, só com números das saídas do notebook, incluindo o limite do dado ("% de dado utilizável", setembro incompleto, pesos como ponto de partida, rubricas sem peso, desbalanceamento, chaves de teste com 1 só registro (contagem lida de `resultados/`, sem número fixo), chaves excluídas por falta de rótulo e o viés de seleção) (A3). Redação obrigatória: o snapshot é "mapa histórico observado + experimento retrospectivo", nunca previsão; o backtest é retrospectivo e não afirma "ausência de vazamento"; ago–set é avaliação exploratória (visto no T017); sensibilidade aos pesos (todos iguais a 1; 1/2/3) reportada sem escolher pesos por ago–set; "risco" descrito como intensidade registrada; proveniência do raw declarada com o que foi e o que não foi verificado
++- [ ] T033 [US4] `RELATORIO_ML.md` de 2 a 4 páginas, só com números das saídas do notebook, incluindo o limite do dado ("% de dado utilizável", possível incompletude de setembro (hipótese; afirmar só com evidência de cobertura), pesos como ponto de partida, rubricas sem peso, desbalanceamento, chaves de teste com 1 só registro (contagem lida de `resultados/`, sem número fixo), chaves excluídas por falta de rótulo e o viés de seleção) (A3). Redação obrigatória: o snapshot é "mapa histórico observado + experimento retrospectivo", nunca previsão; o backtest é retrospectivo e não afirma "ausência de vazamento"; ago–set é avaliação exploratória (visto no T017); sensibilidade aos pesos (todos iguais a 1; 1/2/3) reportada sem escolher pesos por ago–set; "risco" descrito como intensidade registrada; proveniência do raw declarada com o que foi e o que não foi verificado
+ - [ ] T034 [US4] Varrer `README.md`, `RELATORIO_ML.md`, `ml/dados/README.md` e o `manifest.json` por "tempo real", "rota segura" e "local seguro" fora de negação; corrigir o que achar (Princípio II)
+ - [ ] T035 [US4] [Nando] Avisá-lo e só então rodar a revisão red-team real com o Codex CLI sobre o repositório já pronto (T029 a T034 concluídas); anexar o relatório do Codex e registrar achados e correções (A6)
+ - [ ] T036 [US4] Para cada achado do red-team do diff, registrar disposição individual (corrigido, recusado com motivo ou adiado por decisão do Nando) e a evidência; aplicar as correções, reexecutar `pytest` e o notebook e revalidar os artefatos finais (hashes, snapshot, relatório)
+--- a/docs/SPEC-ML.md	2026-11-11 23:59:52
++++ docs/SPEC-ML.md	2026-11-13 09:49:07
+@@ -33,7 +33,7 @@
+ ## 6. Modelagem
+ - Split temporal pela data do fato: treino jan–jul, teste ago–set. Registros com fato fora de jan–set 2026 ficam fora da modelagem ("fora da janela"). Desbalanceamento declarado.
+ - Alvo: o nível de cada chave em ago–set, com features só de jan–jul. Features de qualquer exemplo usam apenas registros anteriores ao período do seu rótulo; o rótulo de teste vem só de registros de ago–set.
+-- Candidatos executados: RF, XGBoost e MLP (mais linhas de base). LSTM e KMeans+PCA: declarados "não executados" com justificativa, pendente de confirmação do Nando. Escolha justificada no relatório.
++- Candidatos planejados (T025 aberto): RF, XGBoost e MLP (mais linhas de base). LSTM e KMeans+PCA: declarados "não executados" com justificativa, pendente de confirmação do Nando. Escolha justificada no relatório.
+ - Busca de ≥10 combinações de 3 hiperparâmetros, CV só no treino, por origem e com expurgo (sem sobreposição de rótulo).
+ - Métricas de treino e teste lado a lado; discussão de overfitting; baseline simples.
+ 
+@@ -51,7 +51,7 @@
+ - Idempotência: duas ingestões produzem o mesmo snapshot (mesmo checksum).
+ - Checksum: o XLSX e o snapshot batem com o declarado.
+ - Quarentena: linhas sem hora ou conflitantes não entram no treino; contagem reconciliada (entrada = usadas + quarentena + duplicata removida + fora da janela).
+-- Sem vazamento: nenhuma data de teste anterior à última de treino.
++- Controle de vazamento temporal: nenhuma data de teste anterior à última de treino, features estritamente anteriores ao início do rótulo e transformações ajustadas só no treino da dobra (backtest retrospectivo; não afirma "ausência de vazamento").
+ - "Sem dado" nunca vira 0.
+ 
+ ## 9. Contrato com o Abner (prazo 11/11 12h)

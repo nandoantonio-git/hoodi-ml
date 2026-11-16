@@ -1,0 +1,264 @@
+{
+  "A_mesmo_alvo": {
+    "desenho": "A_mesmo_alvo",
+    "cortes": [
+      0.25,
+      0.5,
+      1.25
+    ],
+    "origens_treino_selecao": [
+      [
+        13,
+        14
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        15,
+        16
+      ],
+      [
+        16,
+        17
+      ],
+      [
+        17,
+        18
+      ],
+      [
+        18,
+        19
+      ],
+      [
+        19,
+        20
+      ],
+      [
+        20,
+        21
+      ],
+      [
+        21,
+        22
+      ],
+      [
+        22,
+        23
+      ],
+      [
+        23,
+        24
+      ],
+      [
+        24,
+        25
+      ],
+      [
+        25,
+        26
+      ],
+      [
+        26,
+        27
+      ],
+      [
+        27,
+        28
+      ],
+      [
+        28,
+        29
+      ],
+      [
+        29,
+        30
+      ],
+      [
+        30,
+        31
+      ],
+      [
+        31,
+        32
+      ],
+      [
+        32,
+        33
+      ],
+      [
+        33,
+        34
+      ],
+      [
+        34,
+        35
+      ],
+      [
+        35,
+        36
+      ],
+      [
+        36,
+        37
+      ],
+      [
+        37,
+        38
+      ],
+      [
+        38,
+        39
+      ],
+      [
+        39,
+        40
+      ],
+      [
+        40,
+        41
+      ]
+    ],
+    "origem_validacao": [
+      42,
+      43
+    ],
+    "validacao": {
+      "rf_regularizado": {
+        "macro_f1": 0.5359404602202242,
+        "custo_medio": 0.9253208868144691,
+        "taxa_subestimacao": 0.26487747957992996,
+        "taxa_superestimacao": 0.1983663943990665,
+        "recall_nivel_3": 0.6930232558139535,
+        "recall_risco_alto": 0.762,
+        "precisao_risco_alto": 0.8504464285714286
+      },
+      "rf_original": {
+        "macro_f1": 0.5367846971630466,
+        "custo_medio": 0.9101516919486581,
+        "taxa_subestimacao": 0.2590431738623104,
+        "taxa_superestimacao": 0.20303383897316218,
+        "recall_nivel_3": 0.6651162790697674,
+        "recall_risco_alto": 0.792,
+        "precisao_risco_alto": 0.8336842105263158
+      },
+      "kmeans_pca": {
+        "macro_f1": 0.42783581045986663,
+        "custo_medio": 0.9183197199533255,
+        "taxa_subestimacao": 0.22403733955659277,
+        "taxa_superestimacao": 0.2660443407234539,
+        "recall_nivel_3": 0.641860465116279,
+        "recall_risco_alto": 0.926,
+        "precisao_risco_alto": 0.7223088923556942
+      },
+      "base_persistencia_historia": {
+        "macro_f1": 0.4925655466042152,
+        "custo_medio": 0.9533255542590432,
+        "taxa_subestimacao": 0.2777129521586931,
+        "taxa_superestimacao": 0.22287047841306884,
+        "recall_nivel_3": 0.6697674418604651,
+        "recall_risco_alto": 0.778,
+        "precisao_risco_alto": 0.8241525423728814
+      },
+      "base_persistencia_recente": {
+        "macro_f1": 0.5147203708875661,
+        "custo_medio": 0.9684947491248541,
+        "taxa_subestimacao": 0.29171528588098017,
+        "taxa_superestimacao": 0.1855309218203034,
+        "recall_nivel_3": 0.6651162790697674,
+        "recall_risco_alto": 0.768,
+        "precisao_risco_alto": 0.8533333333333334
+      }
+    },
+    "vencedor": "rf_original",
+    "regra": "maior macro-F1 na origem de validação; gravado antes de abrir o Teste"
+  },
+  "B_semestral": {
+    "desenho": "B_semestral",
+    "cortes": [
+      0.16666666666666666,
+      0.3888888888888889,
+      0.9444444444444445
+    ],
+    "origens_treino_selecao": [
+      [
+        13,
+        18
+      ],
+      [
+        16,
+        21
+      ],
+      [
+        19,
+        24
+      ],
+      [
+        22,
+        27
+      ],
+      [
+        25,
+        30
+      ],
+      [
+        28,
+        33
+      ]
+    ],
+    "origem_validacao": [
+      34,
+      39
+    ],
+    "validacao": {
+      "rf_regularizado": {
+        "macro_f1": 0.6184766918728555,
+        "custo_medio": 0.6267154620311071,
+        "taxa_subestimacao": 0.20677035681610248,
+        "taxa_superestimacao": 0.1747483989021043,
+        "recall_nivel_3": 0.7700729927007299,
+        "recall_risco_alto": 0.8439716312056738,
+        "precisao_risco_alto": 0.8607594936708861
+      },
+      "rf_original": {
+        "macro_f1": 0.6347315195582486,
+        "custo_medio": 0.5882891125343093,
+        "taxa_subestimacao": 0.18847209515096067,
+        "taxa_superestimacao": 0.17840805123513268,
+        "recall_nivel_3": 0.7773722627737226,
+        "recall_risco_alto": 0.8546099290780141,
+        "precisao_risco_alto": 0.8622540250447227
+      },
+      "kmeans_pca": {
+        "macro_f1": 0.5795811273629299,
+        "custo_medio": 0.7676120768526989,
+        "taxa_subestimacao": 0.242451967063129,
+        "taxa_superestimacao": 0.16742909423604757,
+        "recall_nivel_3": 0.7335766423357665,
+        "recall_risco_alto": 0.8333333333333334,
+        "precisao_risco_alto": 0.8303886925795053
+      },
+      "base_persistencia_historia": {
+        "macro_f1": 0.6019521449279235,
+        "custo_medio": 0.6139066788655078,
+        "taxa_subestimacao": 0.17749313815187556,
+        "taxa_superestimacao": 0.21774931381518756,
+        "recall_nivel_3": 0.8248175182481752,
+        "recall_risco_alto": 0.8634751773049646,
+        "precisao_risco_alto": 0.8411053540587219
+      },
+      "base_persistencia_recente": {
+        "macro_f1": 0.5895083999661795,
+        "custo_medio": 0.7090576395242452,
+        "taxa_subestimacao": 0.2232387923147301,
+        "taxa_superestimacao": 0.1848124428179323,
+        "recall_nivel_3": 0.7481751824817519,
+        "recall_risco_alto": 0.8209219858156028,
+        "precisao_risco_alto": 0.8402903811252269
+      }
+    },
+    "vencedor": "rf_original",
+    "regra": "maior macro-F1 na origem de validação; gravado antes de abrir o Teste"
+  }
+}

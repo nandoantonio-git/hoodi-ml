@@ -1,0 +1,33 @@
+Reconciliação da ingestão (SC-002)
+entrada              814,900
+usada                 20,343
+quarentena           384,867
+duplicata_removida     2,390
+fora_da_janela       407,300
+soma                 814,900  (fecha: True)
+
+Por destino e motivo:
+  duplicata_removida                                2,390
+  fora_da_janela      fora_da_janela_data             307
+  fora_da_janela      fora_do_perimetro           406,993
+  quarentena          bo_conflito_coordenada          365
+  quarentena          bo_conflito_hora                 11
+  quarentena          sem_coordenada              182,090
+  quarentena          sem_hora                    202,401
+  usada                                            20,343
+
+Quarentena com coordenada dentro do perímetro: 14,119
+motivo
+sem_hora                  14113
+bo_conflito_coordenada        6
+% de dado utilizável (usadas / entrada): 2.50%
+Usadas por mês: {1: 1836, 2: 2216, 3: 2159, 4: 2233, 5: 2565, 6: 2596, 7: 2307, 8: 2330, 9: 2101}
+Células: 258  chaves: 1172
+
+No perímetro (coordenada válida dentro do retângulo): 34,771 linhas; usadas 20,343 = 58.5% de dado utilizável
+destino             motivo                
+duplicata_removida                                2
+fora_da_janela      fora_da_janela_data         307
+quarentena          bo_conflito_coordenada        6
+                    sem_hora                  14113
+usada                                         20343

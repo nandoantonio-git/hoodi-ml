@@ -1,0 +1,18 @@
+{
+  "lambda_escolhido": 0.0,
+  "media_hit_rate_10_U1_por_lambda": {
+    "0.0": 0.3962859752855349,
+    "0.25": 0.3934939224350599,
+    "0.5": 0.38450408583260587,
+    "0.75": 0.3603389461896161
+  },
+  "origens_selecao": [
+    "mar–abr/2024",
+    "mai–jun/2024",
+    "jul–ago/2024",
+    "set–out/2024",
+    "nov–dez/2024"
+  ],
+  "regra": "maior hit rate a 10% médio em U1 nas origens de seleção; empate → menor λ",
+  "nota": "congelado antes de calcular qualquer origem reportada (r3 §2.2)"
+}

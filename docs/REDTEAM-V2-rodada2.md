@@ -1,0 +1,43 @@
+## **BLOQUEANTE**
+
+1. **Coordenadas ou identificadores em `processed/` — RESOLVIDO.** `COLS_USADAS` agora contém apenas `rubrica`, `data_fato`, `mes`, `hora`, `faixa` e `celula`, e `saida_usadas()` verifica o conjunto de colunas proibidas ([ingestao.py:98](ml/ingestao.py:98)). Li os schemas dos dois Parquets atuais: nenhum contém coordenadas nem identificadores de BO. O novo teste também verifica os arquivos existentes em `processed/` ([test_schema_processed.py:8](tests/test_schema_processed.py:8)).
+
+Não encontrei bloqueantes novos.
+
+## **ALTA**
+
+1. **Validação contaminada pelos cortes — RESOLVIDO quanto ao vazamento identificado.** `cortes_sel` é calculado só com `treino_sel`, e a origem de validação é excluída desse conjunto ([v2_historico.py:153](ml/v2_historico.py:153), [v2_historico.py:158](ml/v2_historico.py:158)). A seleção é registrada ou conferida antes de `avaliar_teste()` ([v2_historico.py:299](ml/v2_historico.py:299), [v2_historico.py:317](ml/v2_historico.py:317)). **Ressalva:** isso demonstra a ordem do fluxo atual, não que o Teste tenha permanecido cego entre rodadas.
+
+2. **Evidência pareada do vencedor — RESOLVIDO.** A comparação primária agora usa o modelo vencedor da seleção contra `base_persistencia_historia` e a calcula tanto por célula res9 quanto por bloco res7 ([v2_historico.py:199](ml/v2_historico.py:199), [v2_historico.py:214](ml/v2_historico.py:214)). O artefato confirma `rf_regularizado` como vencedor de A e `rf_original` de B ([v2_historico.json](ml/dados/resultados/v2_historico.json)).
+
+3. **Ganho de B sobre persistência — PARCIAL.** A comparação primária agora é do vencedor selecionado, mas a r2 foi definida após o Teste da r1 ter sido visto; o código registra explicitamente que não é cega ao Teste ([v2_historico.py:14](ml/v2_historico.py:14)). Além disso, para B, os ICs de macro-F1 incluem zero tanto no bootstrap res9 **[−0,001; 0,048]** quanto no res7 **[−0,005; 0,054]**, com apenas **9 blocos** ([v2_historico.json](ml/dados/resultados/v2_historico.json)). Os artefatos não sustentam ganho confirmatório. O relatório deve descrever a diferença observada como exploratória e inconclusiva; “ganho significativo” ou “ganho real” não é sustentado.
+
+4. **Comparação v2 × v1 atribuída somente ao histórico — NOVO.** A comparação usa as mesmas 847 chaves e verifica que os rótulos são iguais ([v2_historico.py:222](ml/v2_historico.py:222), [v2_historico.py:238](ml/v2_historico.py:238)). Isso torna o pareamento do Teste justo, mas não isola o efeito de mais histórico: A treina com origens móveis mensais de 13 a 42 ([v2_historico.py:140](ml/v2_historico.py:140), [v2_historico.py:152](ml/v2_historico.py:152)), enquanto a v1 ajusta com T1–T4 ([modelos.py](ml/modelos.py)). Assim, muda também a quantidade e composição de exemplos de treino. A frase do código “só muda a história nas variáveis” ([v2_historico.py:248](ml/v2_historico.py:248)) é forte demais. Corrigir para dizer que a comparação é pareada no Teste, mas não é uma ablação que isola somente o comprimento da história.
+
+## **MÉDIA**
+
+1. **Dependência espacial e multiplicidade — PARCIAL.** A v2 acrescentou bootstrap por célula e por bloco res7; as diferenças secundárias recebem intervalo de Bonferroni, e `frac_reamostras_a_melhor` está documentada como descritiva, não como p-valor ([incerteza_custo.py:79](ml/incerteza_custo.py:79)). Persistem limites relevantes: são só 9 blocos res7; os ICs primários não ajustam a família entre desenhos; e o ajuste secundário é por comparação, não por todas as métricas e análises repetidas. Tratar tudo como exploratório, sem inferência de significância a partir da fração de reamostras.
+
+2. **“Teto” de repetibilidade — PARCIAL.** A função de repetibilidade agora diz que não é teto nem comparável ao Teste B; a persistência no próprio Teste B é a referência compatível ([v2_historico.py:253](ml/v2_historico.py:253)). Porém, o início do módulo ainda chama a repetibilidade v1 de “teto” ([v2_historico.py:3](ml/v2_historico.py:3)). Remover ou corrigir esse texto para não contradizer o restante. O relatório não pode tratar a repetibilidade sem modelo como limite superior do desempenho de B.
+
+3. **“Mais histórico não ajuda” — PARCIAL.** O artefato v2 × v1 informa que IC que cruza zero é inconclusivo; a diferença de macro-F1 do RF regularizado é cerca de **0,003**, com IC pareado incluindo zero ([v2_historico.json](ml/dados/resultados/v2_historico.json)). Isso corrige a conclusão forte, mas, pela diferença no conjunto de treino descrita acima, não atribui isoladamente o resultado à janela de features. O relatório pode dizer que **neste experimento** não foi observada evidência clara de melhora; não pode afirmar que mais histórico não ajuda.
+
+4. **Chaves sem rótulo observado — RESOLVIDO.** Os resultados informam o escopo das métricas, contam chaves sem rótulo e as tratam separadamente em `alerta_em_chave_sem_rotulo` ([v2_historico.py:206](ml/v2_historico.py:206), [v2_historico.py:211](ml/v2_historico.py:211)). Esses resultados não estimam desempenho sobre todas as chaves que poderiam receber previsão; essa delimitação deve acompanhar as métricas.
+
+5. **Rastreabilidade da seleção v2 — PARCIAL.** A seleção existente é comparada integralmente à seleção recalculada, e o registro inclui semente e parâmetros ([v2_historico.py:169](ml/v2_historico.py:169), [v2_historico.py:303](ml/v2_historico.py:303)). O resultado registra commit e manifesto SHA-256 dos Parquets ([v2_historico.json](ml/dados/resultados/v2_historico.json)). Ainda assim, o Teste da r1 já havia sido visto antes da seleção r2, conforme a própria nota do código. Não apresentar a r2 como seleção confirmatória cega.
+
+6. **Importância por permutação — PARCIAL.** O módulo agora chama a análise de exploratória e explica que variáveis correlacionadas repartem importância e que o desvio padrão entre permutações não é incerteza amostral ([achados_revisao.py:10](ml/achados_revisao.py:10)). O cálculo continua sendo feito no Teste ([achados_revisao.py:105](ml/achados_revisao.py:105)). Não usar esses valores como evidência confirmatória, causal ou ranking definitivo.
+
+7. **Cortes de seleção versus cortes finais em A — NOVO.** A seleção A usa cortes `[0,25; 0,5; 1,1667]`, mas o Teste usa `[0,25; 0,5; 1,25]` ([selecao_v2_r2.json](ml/dados/resultados/selecao_v2_r2.json)). É defensável calcular cortes da validação sem usar a própria validação; porém, o vencedor é selecionado para uma discretização diferente da aplicada ao Teste A. Descrever essa diferença e limitar a interpretação do vencedor; idealmente, alinhar em desenho futuro a regra de seleção ao regime de cortes da avaliação final sem contaminar a validação.
+
+8. **Rótulos retrospectivos — NOVO limite para conclusões.** `SPEC-ML.md` explicita que o arquivo de dados foi atualizado depois dos períodos históricos e que o split por data do fato não prova que os dados estavam disponíveis na origem ([SPEC-ML.md:35](docs/SPEC-ML.md:35), [spec.md:109](specs/001-risco-h3-faixa-horaria/spec.md:109)). O relatório não deve afirmar “ausência de vazamento” ou simular disponibilidade operacional histórica. Pode afirmar que as variáveis são calculadas com meses anteriores ao início do rótulo.
+
+9. **Rastreabilidade da conversão histórica — RESOLVIDO.** O registro v2 contém hashes dos Parquets intermediários e processados, além do commit usado ([v2_historico.py:279](ml/v2_historico.py:279)); os XLSX históricos têm hashes em `CHECKSUM_HISTORICO.txt`, e a reconciliação fecha em **4.409.757** linhas ([reconciliacao_v2.txt](ml/dados/reconciliacao_v2.txt)). O script original registra os hashes antes da conversão ([00b_historico_xlsx_para_parquet.py:37](scripts/00b_historico_xlsx_para_parquet.py:37)).
+
+## **BAIXA**
+
+1. **Artefatos v1 após a revisão — RESOLVIDO numericamente.** Comparei os JSON da v1 entre `4f3aef5` e o estado atual, normalizando os nomes renomeados e removendo os campos de Bonferroni adicionados. Os hashes dos JSON normalizados são idênticos para `achados_revisao.json` e `incerteza_custo.json`. Os números da v1, portanto, não mudaram; houve renomeação de chaves e inclusão de campos de intervalo.
+
+## Veredito
+
+**Impedem uma aprovação sem altas:** a seleção r2 não é cega ao Teste da r1; a diferença v2 × v1 não isola somente o histórico das variáveis; e o resultado de B não demonstra ganho sobre persistência. O código atual não sustenta conclusões confirmatórias para essas comparações. **Sem bloqueantes.**

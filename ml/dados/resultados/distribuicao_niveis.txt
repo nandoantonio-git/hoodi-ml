@@ -1,0 +1,21 @@
+Cortes de pontuação mensal (pontos/mês/hora), do treino T1–T4: [0.25, 0.5, 1.25]
+Regra: nível 0 < c1 ≤ nível 1 < c2 ≤ nível 2 < c3 ≤ nível 3
+
+T1: rótulo em meses [3, 4], chaves com dado 891
+T2: rótulo em meses [4, 5], chaves com dado 885
+T3: rótulo em meses [5, 6], chaves com dado 870
+T4: rótulo em meses [6, 7], chaves com dado 857
+Teste: rótulo em meses [8, 9], chaves com dado 882
+
+Chaves por nível:
+        T1   T2   T3   T4  Teste  Treino (T1–T4 juntos)  Snapshot jan–set
+0      210  216  210  184    245                    820               490
+1      171  156  163  173    177                    663               207
+2      284  288  271  285    261                   1128               275
+3      226  225  226  215    199                    892               200
+total  891  885  870  857    882                   3503              1172
+
+Snapshot: 1395 chaves; com dado 1172; sem dado 223; células 279
+Teste: chaves com features (jan–jul) 1137; com rótulo ago–set 847; excluídas por falta de rótulo 290; rótulo sem features 35
+Chaves de teste com 1 só registro pontuável: 251
+Rubricas sem peso (registros usados): 119 (0.58%); ver resultados/rubricas_sem_peso.csv

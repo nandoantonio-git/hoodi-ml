@@ -1,0 +1,450 @@
+{
+  "nota": "exploração adicional (ago–set já visto); seleção pré-registrada inalterada",
+  "item2_vies_selecao": {
+    "n_chaves_sem_rotulo": 290,
+    "fracao_marcada_risco_2_3": {
+      "random_forest": 0.1482758620689655,
+      "xgboost": 0.16206896551724137,
+      "mlp": 0.3413793103448276,
+      "lstm": 0.08620689655172414,
+      "kmeans_pca": 0.3137931034482759,
+      "rf_regularizado": 0.12758620689655173,
+      "base_persistencia": 0.07241379310344828
+    },
+    "distribuicao_prevista": {
+      "random_forest": {
+        "0": 212,
+        "1": 35,
+        "2": 43
+      },
+      "xgboost": {
+        "0": 201,
+        "1": 42,
+        "2": 45,
+        "3": 2
+      },
+      "mlp": {
+        "0": 185,
+        "1": 6,
+        "2": 98,
+        "3": 1
+      },
+      "lstm": {
+        "0": 231,
+        "1": 34,
+        "2": 23,
+        "3": 2
+      },
+      "kmeans_pca": {
+        "0": 181,
+        "1": 18,
+        "2": 88,
+        "3": 3
+      },
+      "rf_regularizado": {
+        "0": 228,
+        "1": 25,
+        "2": 35,
+        "3": 2
+      },
+      "base_persistencia": {
+        "0": 218,
+        "1": 51,
+        "2": 19,
+        "3": 2
+      }
+    }
+  },
+  "item3_repetibilidade_rotulo": [
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "5",
+      "janelas": "8-8 → 9-9",
+      "n_chaves": 486,
+      "mediana_registros_rotulo": 3.0,
+      "macro_f1": 0.39074905015531886,
+      "concordancia_exata": 0.43621399176954734,
+      "ate_1_nivel": 0.8559670781893004
+    },
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "5",
+      "janelas": "4-5 → 6-7",
+      "n_chaves": 717,
+      "mediana_registros_rotulo": 4.0,
+      "macro_f1": 0.4597307875536144,
+      "concordancia_exata": 0.4755927475592748,
+      "ate_1_nivel": 0.8898186889818689
+    },
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "5",
+      "janelas": "6-7 → 8-9",
+      "n_chaves": 716,
+      "mediana_registros_rotulo": 4.0,
+      "macro_f1": 0.4471169136756308,
+      "concordancia_exata": 0.4511173184357542,
+      "ate_1_nivel": 0.8756983240223464
+    },
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "5",
+      "janelas": "1-7 → 8-9",
+      "n_chaves": 847,
+      "mediana_registros_rotulo": 3.0,
+      "macro_f1": 0.4886675351372098,
+      "concordancia_exata": 0.5088547815820543,
+      "ate_1_nivel": 0.9185360094451004
+    },
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "8-8 → 9-9",
+      "n_chaves": 331,
+      "mediana_registros_rotulo": 4.0,
+      "macro_f1": 0.43441881864531007,
+      "concordancia_exata": 0.4652567975830816,
+      "ate_1_nivel": 0.9335347432024169
+    },
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "4-5 → 6-7",
+      "n_chaves": 397,
+      "mediana_registros_rotulo": 8.0,
+      "macro_f1": 0.5531138427671275,
+      "concordancia_exata": 0.5617128463476071,
+      "ate_1_nivel": 0.9546599496221663
+    },
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "6-7 → 8-9",
+      "n_chaves": 403,
+      "mediana_registros_rotulo": 7.0,
+      "macro_f1": 0.5272215816864028,
+      "concordancia_exata": 0.5260545905707196,
+      "ate_1_nivel": 0.9280397022332506
+    },
+    {
+      "resolucao": "res9 (~0,1 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "1-7 → 8-9",
+      "n_chaves": 438,
+      "mediana_registros_rotulo": 6.0,
+      "macro_f1": 0.5372689630126201,
+      "concordancia_exata": 0.541095890410959,
+      "ate_1_nivel": 0.954337899543379
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "5",
+      "janelas": "8-8 → 9-9",
+      "n_chaves": 169,
+      "mediana_registros_rotulo": 8.0,
+      "macro_f1": 0.5904182674146442,
+      "concordancia_exata": 0.5976331360946746,
+      "ate_1_nivel": 0.9704142011834319
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "5",
+      "janelas": "4-5 → 6-7",
+      "n_chaves": 192,
+      "mediana_registros_rotulo": 14.0,
+      "macro_f1": 0.6577054339158654,
+      "concordancia_exata": 0.65625,
+      "ate_1_nivel": 0.9895833333333334
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "5",
+      "janelas": "6-7 → 8-9",
+      "n_chaves": 194,
+      "mediana_registros_rotulo": 12.0,
+      "macro_f1": 0.658854678995344,
+      "concordancia_exata": 0.654639175257732,
+      "ate_1_nivel": 0.9845360824742269
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "5",
+      "janelas": "1-7 → 8-9",
+      "n_chaves": 209,
+      "mediana_registros_rotulo": 10.0,
+      "macro_f1": 0.6690226440226441,
+      "concordancia_exata": 0.6698564593301436,
+      "ate_1_nivel": 0.9808612440191388
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "8-8 → 9-9",
+      "n_chaves": 81,
+      "mediana_registros_rotulo": 17.0,
+      "macro_f1": 0.6476911976911977,
+      "concordancia_exata": 0.654320987654321,
+      "ate_1_nivel": 1.0
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "4-5 → 6-7",
+      "n_chaves": 84,
+      "mediana_registros_rotulo": 30.0,
+      "macro_f1": 0.820834953721708,
+      "concordancia_exata": 0.8214285714285714,
+      "ate_1_nivel": 1.0
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "6-7 → 8-9",
+      "n_chaves": 86,
+      "mediana_registros_rotulo": 32.5,
+      "macro_f1": 0.7159134221064313,
+      "concordancia_exata": 0.7209302325581395,
+      "ate_1_nivel": 0.9767441860465116
+    },
+    {
+      "resolucao": "res8 (~0,7 km²)",
+      "faixas": "2 (dia/noite)",
+      "janelas": "1-7 → 8-9",
+      "n_chaves": 88,
+      "mediana_registros_rotulo": 31.5,
+      "macro_f1": 0.7821344140493076,
+      "concordancia_exata": 0.7840909090909091,
+      "ate_1_nivel": 1.0
+    }
+  ],
+  "item6_deslocamento": {
+    "cortes_treino": [
+      0.25,
+      0.5,
+      1.25
+    ],
+    "quantis_teste_25_50_75": [
+      0.16666666666666666,
+      0.5,
+      1.0833333333333333
+    ],
+    "proporcao_treino": {
+      "0": 0.19763729246487868,
+      "1": 0.18518518518518517,
+      "2": 0.33588761174968074,
+      "3": 0.28128991060025543
+    },
+    "proporcao_teste": {
+      "0": 0.2680047225501771,
+      "1": 0.19716646989374262,
+      "2": 0.29988193624557263,
+      "3": 0.23494687131050768
+    }
+  },
+  "item7_bootstrap_blocos": {
+    "celula_res9": {
+      "n_grupos": 230,
+      "macro_f1": {
+        "rf_regularizado": [
+          0.4792523787097963,
+          0.5457396350020784
+        ],
+        "random_forest": [
+          0.43219130225493385,
+          0.4997611193638696
+        ],
+        "kmeans_pca": [
+          0.4665826452958164,
+          0.5353309714718337
+        ],
+        "base_persistencia": [
+          0.4570758818834864,
+          0.523982507971324
+        ]
+      },
+      "diferencas": {
+        "rf_regularizado − base_persistencia": {
+          "media": 0.021593795621821253,
+          "ic95": [
+            -0.01034666607966706,
+            0.05220503098511358
+          ],
+          "ic_bonferroni": [
+            -0.01034666607966706,
+            0.05220503098511358
+          ],
+          "frac_reamostras_a_melhor": 0.9125
+        },
+        "rf_regularizado − random_forest": {
+          "media": 0.04678173611263352,
+          "ic95": [
+            0.020041195624069537,
+            0.07373841769120422
+          ],
+          "ic_bonferroni": [
+            0.020041195624069537,
+            0.07373841769120422
+          ],
+          "frac_reamostras_a_melhor": 0.9995
+        },
+        "kmeans_pca − base_persistencia": {
+          "media": 0.010261668861824426,
+          "ic95": [
+            -0.02597861834032414,
+            0.046229985889501855
+          ],
+          "ic_bonferroni": [
+            -0.02597861834032414,
+            0.046229985889501855
+          ],
+          "frac_reamostras_a_melhor": 0.7145
+        }
+      }
+    },
+    "bloco_res7": {
+      "n_grupos": 9,
+      "macro_f1": {
+        "rf_regularizado": [
+          0.46831161213944544,
+          0.5559131057125596
+        ],
+        "random_forest": [
+          0.40870646556083307,
+          0.5292137439879985
+        ],
+        "kmeans_pca": [
+          0.4604626087286686,
+          0.5336991819260204
+        ],
+        "base_persistencia": [
+          0.4580670082690962,
+          0.5206074879049685
+        ]
+      },
+      "diferencas": {
+        "rf_regularizado − base_persistencia": {
+          "media": 0.020976877456285743,
+          "ic95": [
+            -0.005920475355373478,
+            0.054804487213613806
+          ],
+          "ic_bonferroni": [
+            -0.005920475355373478,
+            0.054804487213613806
+          ],
+          "frac_reamostras_a_melhor": 0.9235
+        },
+        "rf_regularizado − random_forest": {
+          "media": 0.04624989746118017,
+          "ic95": [
+            0.014213994312729683,
+            0.07866793947498345
+          ],
+          "ic_bonferroni": [
+            0.014213994312729683,
+            0.07866793947498345
+          ],
+          "frac_reamostras_a_melhor": 0.997
+        },
+        "kmeans_pca − base_persistencia": {
+          "media": 0.010848886516222024,
+          "ic95": [
+            -0.02440434450751753,
+            0.04940042873380329
+          ],
+          "ic_bonferroni": [
+            -0.02440434450751753,
+            0.04940042873380329
+          ],
+          "frac_reamostras_a_melhor": 0.6935
+        }
+      }
+    }
+  },
+  "item8_importancias_rf_regularizado": [
+    {
+      "variavel": "taxa_pontuacao",
+      "permutacao_media": 0.0696380338619714,
+      "permutacao_dp": 0.014704427480039509,
+      "impureza": 0.39765358017771685
+    },
+    {
+      "variavel": "pont_vizinhas",
+      "permutacao_media": 0.025731458205626945,
+      "permutacao_dp": 0.009736678081510753,
+      "impureza": 0.1576994886263589
+    },
+    {
+      "variavel": "taxa_registros",
+      "permutacao_media": 0.021989425161010982,
+      "permutacao_dp": 0.007402204771507008,
+      "impureza": 0.17887025097488266
+    },
+    {
+      "variavel": "faixa",
+      "permutacao_media": 0.021722509867144916,
+      "permutacao_dp": 0.010218731511244642,
+      "impureza": 0.06930982073034497
+    },
+    {
+      "variavel": "pont_faixa_3",
+      "permutacao_media": 0.011432453633637953,
+      "permutacao_dp": 0.004115976907907884,
+      "impureza": 0.016343034138348436
+    },
+    {
+      "variavel": "pont_faixa_2",
+      "permutacao_media": 0.008081506110020304,
+      "permutacao_dp": 0.004749824308056729,
+      "impureza": 0.05980691612513592
+    },
+    {
+      "variavel": "pont_faixa_0",
+      "permutacao_media": 0.0047946806158670145,
+      "permutacao_dp": 0.0030097225654803473,
+      "impureza": 0.011271744527916077
+    },
+    {
+      "variavel": "pont_faixa_1",
+      "permutacao_media": 0.004379065067528004,
+      "permutacao_dp": 0.0026241105708211033,
+      "impureza": 0.028581427331299186
+    },
+    {
+      "variavel": "taxa_furto",
+      "permutacao_media": 0.0031063198006935633,
+      "permutacao_dp": 0.0035826601922187783,
+      "impureza": 0.02667453420210438
+    },
+    {
+      "variavel": "pont_faixa_4",
+      "permutacao_media": 0.0019291015491640473,
+      "permutacao_dp": 0.004054250562235246,
+      "impureza": 0.03734587825200339
+    },
+    {
+      "variavel": "taxa_lesao",
+      "permutacao_media": 0.0014024769408417625,
+      "permutacao_dp": 0.0022023821414486945,
+      "impureza": 0.0015902064036267957
+    },
+    {
+      "variavel": "taxa_graves",
+      "permutacao_media": 0.0,
+      "permutacao_dp": 0.0,
+      "impureza": 0.0
+    },
+    {
+      "variavel": "taxa_drogas",
+      "permutacao_media": 0.0,
+      "permutacao_dp": 0.0,
+      "impureza": 0.0
+    },
+    {
+      "variavel": "taxa_roubo",
+      "permutacao_media": -0.0010099801184651092,
+      "permutacao_dp": 0.0010720994764173975,
+      "impureza": 0.014853118510262296
+    }
+  ]
+}

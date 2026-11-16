@@ -1,0 +1,79 @@
+{
+  "fontes": {
+    "jan_jun.parquet": "3ad519f5eed0a05aa8817d45e29c3640ee5de203510293c23b9a7d11167fa063",
+    "jul_dez.parquet": "594ce6e835baf7dd216863e7e0f2bebb2a87bd30444b80d00dd827bbc18f925e"
+  },
+  "nota": "DESCR_CONDUTA e DESCR_SUBTIPOLOCAL existem só no interim 2026; o interim 2023–2025 foi gravado sem elas.",
+  "perimetro_coord_valida": {
+    "n": 34771,
+    "via_publica": 30991,
+    "conduta_nula": 15334,
+    "conduta_veiculo": 1745,
+    "conduta_veiculo_por_valor": {
+      "Veículo": 953,
+      "Interior de Veículo": 635,
+      "Aplicativo de Mobilidade Urbana": 132,
+      "Carga": 25
+    },
+    "conduta_top": {
+      "NULL": 15334,
+      "Outros": 14205,
+      "Transeunte": 2694,
+      "Veículo": 953,
+      "Interior de Veículo": 635,
+      "Estabelecimento Comercial": 223,
+      "Interior Estabelecimento": 199,
+      "Interior Transporte Coletivo": 175,
+      "Aplicativo de Mobilidade Urbana": 132,
+      "Fios e Cabos": 68,
+      "Estabelecimento-Outros": 30,
+      "Carga": 25
+    },
+    "subtipo_top": {
+      "Via Pública": 30991,
+      "Outros": 1023,
+      "Metroviário e Ferroviário Metropolitano": 577,
+      "Transeunte": 314,
+      "Praça": 176,
+      "Bar/Botequim": 148,
+      "Lojas": 118,
+      "Interior de Veículo Particular": 107
+    }
+  },
+  "usadas_jan_set": {
+    "n": 20343,
+    "via_publica": 18091,
+    "conduta_nula": 9376,
+    "conduta_veiculo": 1391,
+    "conduta_veiculo_por_valor": {
+      "Veículo": 681,
+      "Interior de Veículo": 562,
+      "Aplicativo de Mobilidade Urbana": 127,
+      "Carga": 21
+    },
+    "conduta_top": {
+      "NULL": 9376,
+      "Outros": 6700,
+      "Transeunte": 2241,
+      "Veículo": 681,
+      "Interior de Veículo": 562,
+      "Estabelecimento Comercial": 192,
+      "Interior Estabelecimento": 169,
+      "Interior Transporte Coletivo": 148,
+      "Aplicativo de Mobilidade Urbana": 127,
+      "Fios e Cabos": 33,
+      "Carga": 21,
+      "Estabelecimento-Outros": 21
+    },
+    "subtipo_top": {
+      "Via Pública": 18091,
+      "Metroviário e Ferroviário Metropolitano": 419,
+      "Transeunte": 221,
+      "Praça": 150,
+      "Bar/Botequim": 123,
+      "Outros": 106,
+      "Interior de Veículo Particular": 98,
+      "Lojas": 92
+    }
+  }
+}

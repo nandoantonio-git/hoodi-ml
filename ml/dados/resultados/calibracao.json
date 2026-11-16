@@ -1,0 +1,215 @@
+{
+ "nota": "Exploração adicional, test_seen=true. Calibrador ajustado só com probabilidades fora da dobra nas dobras temporais de CV; o Teste não entra no ajuste.",
+ "modelo": "rf_regularizado",
+ "params": {
+  "n_estimators": 300,
+  "max_depth": 6,
+  "min_samples_leaf": 80,
+  "max_features": 0.5
+ },
+ "n_teste": 847,
+ "n_calibracao": 1616,
+ "frequencia_nivel3_teste": 0.23494687131050768,
+ "sem_calibracao": {
+  "brier_multiclasse": 0.5909493224468706,
+  "log_loss": 1.0440637242397788,
+  "ece_nivel_mais_provavel": 0.046649746910748136,
+  "brier_nivel3": 0.10922395839743719,
+  "macro_f1_argmax": 0.5129095760561277
+ },
+ "isotonica_cv": {
+  "brier_multiclasse": 0.6023415475513223,
+  "log_loss": 1.1308562525354684,
+  "ece_nivel_mais_provavel": 0.10477186593364941,
+  "brier_nivel3": 0.11196379850288762,
+  "macro_f1_argmax": 0.49520514970639984
+ },
+ "confiabilidade_p_nivel3": {
+  "sem_calibracao": [
+   {
+    "faixa": "[0.0,0.1)",
+    "n": 352,
+    "p_media": 0.03681661579369006,
+    "frequencia_observada": 0.022727272727272728
+   },
+   {
+    "faixa": "[0.1,0.2)",
+    "n": 124,
+    "p_media": 0.14913086969080047,
+    "frequencia_observada": 0.11290322580645161
+   },
+   {
+    "faixa": "[0.2,0.3)",
+    "n": 89,
+    "p_media": 0.24347666464486684,
+    "frequencia_observada": 0.21348314606741572
+   },
+   {
+    "faixa": "[0.3,0.4)",
+    "n": 41,
+    "p_media": 0.34319846088014627,
+    "frequencia_observada": 0.21951219512195122
+   },
+   {
+    "faixa": "[0.4,0.5)",
+    "n": 39,
+    "p_media": 0.44839555179475865,
+    "frequencia_observada": 0.41025641025641024
+   },
+   {
+    "faixa": "[0.5,0.6)",
+    "n": 36,
+    "p_media": 0.5612790614503574,
+    "frequencia_observada": 0.4444444444444444
+   },
+   {
+    "faixa": "[0.6,0.7)",
+    "n": 37,
+    "p_media": 0.6513419841196068,
+    "frequencia_observada": 0.40540540540540543
+   },
+   {
+    "faixa": "[0.7,0.8)",
+    "n": 50,
+    "p_media": 0.745589552104037,
+    "frequencia_observada": 0.7
+   },
+   {
+    "faixa": "[0.8,0.9)",
+    "n": 52,
+    "p_media": 0.8502275975469356,
+    "frequencia_observada": 0.7884615384615384
+   },
+   {
+    "faixa": "[0.9,1.0)",
+    "n": 27,
+    "p_media": 0.9347454480184018,
+    "frequencia_observada": 0.9629629629629629
+   }
+  ],
+  "isotonica_cv": [
+   {
+    "faixa": "[0.0,0.1)",
+    "n": 403,
+    "p_media": 0.011814026317958836,
+    "frequencia_observada": 0.02977667493796526
+   },
+   {
+    "faixa": "[0.1,0.2)",
+    "n": 124,
+    "p_media": 0.1442649380035632,
+    "frequencia_observada": 0.16129032258064516
+   },
+   {
+    "faixa": "[0.2,0.3)",
+    "n": 51,
+    "p_media": 0.24213624624413993,
+    "frequencia_observada": 0.2549019607843137
+   },
+   {
+    "faixa": "[0.3,0.4)",
+    "n": 12,
+    "p_media": 0.37506715607913427,
+    "frequencia_observada": 0.08333333333333333
+   },
+   {
+    "faixa": "[0.4,0.5)",
+    "n": 58,
+    "p_media": 0.45945931317399935,
+    "frequencia_observada": 0.3793103448275862
+   },
+   {
+    "faixa": "[0.5,0.6)",
+    "n": 15,
+    "p_media": 0.5396991546120951,
+    "frequencia_observada": 0.26666666666666666
+   },
+   {
+    "faixa": "[0.6,0.7)",
+    "n": 35,
+    "p_media": 0.6489578115573514,
+    "frequencia_observada": 0.4
+   },
+   {
+    "faixa": "[0.7,0.8)",
+    "n": 57,
+    "p_media": 0.7488656839306405,
+    "frequencia_observada": 0.631578947368421
+   },
+   {
+    "faixa": "[0.8,0.9)",
+    "n": 32,
+    "p_media": 0.8558814702794477,
+    "frequencia_observada": 0.6875
+   },
+   {
+    "faixa": "[0.9,1.0)",
+    "n": 60,
+    "p_media": 0.9611283115304192,
+    "frequencia_observada": 0.9166666666666666
+   }
+  ]
+ },
+ "estratos": {
+  "por_faixa": [
+   {
+    "faixa": 0,
+    "faixa_nome": "madrugada",
+    "n": 129,
+    "f1_rf_regularizado": 0.5250060624625085,
+    "f1_persistencia": 0.5282281169428662
+   },
+   {
+    "faixa": 1,
+    "faixa_nome": "manha",
+    "n": 179,
+    "f1_rf_regularizado": 0.5143506678033533,
+    "f1_persistencia": 0.5058206700450701
+   },
+   {
+    "faixa": 2,
+    "faixa_nome": "tarde",
+    "n": 210,
+    "f1_rf_regularizado": 0.5402303221731234,
+    "f1_persistencia": 0.5091014739229025
+   },
+   {
+    "faixa": 3,
+    "faixa_nome": "noite_cedo",
+    "n": 180,
+    "f1_rf_regularizado": 0.40416195312692127,
+    "f1_persistencia": 0.49899903547315405
+   },
+   {
+    "faixa": 4,
+    "faixa_nome": "noite",
+    "n": 149,
+    "f1_rf_regularizado": 0.3897523709167544,
+    "f1_persistencia": 0.34706545022697255
+   }
+  ],
+  "por_registros_na_janela_de_features": [
+   {
+    "registros": "1",
+    "n": 47,
+    "f1_rf_regularizado": 0.26805555555555555,
+    "f1_persistencia": 0.20987654320987653,
+    "acerto_exato_rf": 0.7446808510638298
+   },
+   {
+    "registros": "2-4",
+    "n": 151,
+    "f1_rf_regularizado": 0.3583181041793576,
+    "f1_persistencia": 0.20473181373655308,
+    "acerto_exato_rf": 0.5761589403973509
+   },
+   {
+    "registros": "5+",
+    "n": 649,
+    "f1_rf_regularizado": 0.4434517847651484,
+    "f1_persistencia": 0.4450394517814622,
+    "acerto_exato_rf": 0.4946070878274268
+   }
+  ]
+ }
+}

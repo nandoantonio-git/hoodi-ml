@@ -1,0 +1,24 @@
+Reconciliação v2 (2023-01-01 a 2026-09-30, mesmo perímetro e mesmas regras da v1)
+
+usada: 98545
+quarentena: 2062952
+duplicata_removida: 11042
+fora_da_janela: 2237218
+entrada: 4409757
+
+destino/motivo:
+  duplicata_removida/-: 11042
+  fora_da_janela/fora_da_janela_data: 523
+  fora_da_janela/fora_do_perimetro: 2236695
+  quarentena/bo_conflito_coordenada: 2465
+  quarentena/bo_conflito_hora: 101
+  quarentena/sem_coordenada: 1178232
+  quarentena/sem_data: 913
+  quarentena/sem_hora: 881241
+  usada/-: 98545
+
+usadas por ano do fato / fração com peso (pontuáveis):
+  2023: 29918 / 0.987
+  2024: 24529 / 0.989
+  2025: 23755 / 0.992
+  2026: 20343 / 0.994

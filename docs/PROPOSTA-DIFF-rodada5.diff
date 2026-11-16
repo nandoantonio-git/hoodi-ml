@@ -1,0 +1,147 @@
+
+--- a/specs/001-risco-h3-faixa-horaria/data-model.md	2026-11-13 09:12:48
++++ b/specs/001-risco-h3-faixa-horaria/data-model.md	2026-11-13 09:30:13
+@@ -19,7 +19,7 @@
+ | `destino` | derivada | `usada`, `quarentena`, `duplicata_removida` ou `fora_da_janela` |
+ | `motivo` | derivada | motivo da quarentena ou da exclusão, ou vazio |
+ 
+-**Persistido × transitório** (inventário por camada em `ml/dados/README.md`): `processed/` grava só `rubrica`, `data_fato`, `mes`, `hora`, `faixa`, `lat`, `lon`, `celula` (gitignored, nunca entregue); `quarantine/` grava só `fonte`, `linha`, `rubrica`, `motivo`; `bo_id` existe só em memória, para deduplicar. Snapshot, manifest e fixture levam `h3_cell`, `faixa`, `faixa_nome`, `status`, `nivel`, `pontuacao_mensal`, `n_registros`.
++**Persistido × transitório** (inventário por camada em `ml/dados/README.md`): `processed/` grava só `rubrica`, `data_fato`, `mes`, `hora`, `faixa`, `celula` (gitignored, nunca entregue); `lat` e `lon` existem só em memória, até a conversão para H3, e MUST NOT ser gravadas em `processed/` (constituição VII); `quarantine/` grava só `fonte`, `linha`, `rubrica`, `motivo`; `bo_id` existe só em memória, para deduplicar. Snapshot, manifest e fixture levam `h3_cell`, `faixa`, `faixa_nome`, `status`, `nivel`, `pontuacao_mensal`, `n_registros`.
+ 
+ **Destino (exclusivo, cada linha tem exatamente um)**
+ - `duplicata_removida`: linha idêntica de mesmo BO e rubrica; só a repetida é removida.
+
+--- a/specs/001-risco-h3-faixa-horaria/plan.md	2026-11-13 09:12:48
++++ b/specs/001-risco-h3-faixa-horaria/plan.md	2026-11-13 09:30:13
+@@ -44,7 +44,7 @@
+ | VI. Quarentena e idempotência | destino exclusivo por linha com reconciliação exata; CSV sem timestamp; hash idêntico em duas execuções | OK |
+ | VII. Privacidade e confirmação | derivados e entregas sem campo identificador; `bo_id` só em memória; inventário por camada (T030) e teste dos schemas dos parquets derivados; tarefas `[Nando]` param para confirmação; red-team real via Codex CLI | PLANEJADO (testes de ausência de `bo_id` existem; inventário e teste de schemas pendentes) |
+ 
+-Resultado: sem violações; a seção de complexidade fica vazia.
++Resultado: sem violações no planejamento. Estados distintos: PLANEJADO (V, VII), não implementado nem verificado; nenhum gate está executado ou aprovado. A seção de complexidade fica vazia.
+ 
+ ## Design de modelagem (resumo; detalhes em research D-03 a D-06)
+ 
+@@ -52,7 +52,7 @@
+ - **Rótulo**: nível 0–3 por quartis; os três cortes saem do conjunto de rótulos de treino e valem para o teste.
+ - **Validação cruzada**: por origem com expurgo (dobras T1→T3 e T1–T2→T4; rótulos que se sobrepõem não entram juntos), nunca embaralhada, só no treino.
+ - **Linhas de base**: classe mais frequente e persistência.
+-- **Candidatos executados**: Random Forest, XGBoost e MLP, com ≥10 combinações de 3 hiperparâmetros cada. LSTM e KMeans+PCA: justificados e declarados como não executados.
++- **Candidatos planejados (T025 ainda aberto)**: Random Forest, XGBoost e MLP, com ≥10 combinações de 3 hiperparâmetros cada. LSTM e KMeans+PCA: justificados e declarados como não executados.
+ - **Métricas**: macro-F1, balanced accuracy e erro absoluto médio de nível; treino e teste lado a lado.
+ 
+ ## Project Structure
+@@ -94,10 +94,10 @@
+ 
+ ## Riscos e decisões pendentes
+ 
+-- **Dado ralo no teste**: mediana de 3 registros por chave e 178 chaves com 1 só registro; o relatório declara a incerteza e usa métricas adequadas. Cortes do treino deixam o teste desbalanceado (nível 0 com 347 de 738 chaves; nível 3 com 23). Medido, sob a regra clarificada.
++- **Dado ralo no teste**: mediana e chaves com 1 só registro lidas de `resultados/` (valores da exploração inicial, sob outra fórmula, não são referência operacional); o relatório declara a incerteza e usa métricas adequadas. Cortes do treino deixam o teste desbalanceado (nível 0 com 347 de 738 chaves; nível 3 com 23). Exploração sob a fórmula anterior (soma sem normalização); será substituída pela saída final rastreável.
+ - **Rubricas sem peso**: 56 registros na janela (0,3%) ficam fora da pontuação e são contados no relatório. Feminicídio (3) entra com peso 5, por decisão do Nando.
+ - **LSTM e KMeans+PCA**: decisão de não executar; confirmar que a rubrica do briefing aceita a justificativa.
+-- **Setembro incompleto** (~73 mil contra ~85 mil por mês na base): declarado; pode enviesar o teste.
++- **Setembro possivelmente incompleto** (~73 mil contra ~85 mil por mês na base; menor volume não demonstra incompletude, hipótese a confirmar com evidência de cobertura): declarado; pode enviesar o teste.
+ - **Coordenada exata da FIAP**: pendente, impacto de ~50 m.
+ - **Formato do contrato com o Abner**: CSV + JSON proposto; precisa da confirmação dele (prazo 11/11 12h).
+ 
+
+--- a/specs/001-risco-h3-faixa-horaria/research.md	2026-11-13 09:12:48
++++ b/specs/001-risco-h3-faixa-horaria/research.md	2026-11-13 09:30:13
+@@ -70,7 +70,7 @@
+ - **Decisão**: pontuação = soma de pesos por chave ÷ n meses da janela ÷ horas da faixa (6, 6, 6, 3, 3), em pontos por mês por hora. Os três cortes de quartil vêm do conjunto de rótulos de treino (T1 a T4 juntos) e são fixos para o teste.
+ - **Métricas** (por desbalanceamento): macro-F1, balanced accuracy e erro absoluto médio de nível (o nível é ordinal). Acurácia simples só como informação.
+ - **Linhas de base**: (1) classe mais frequente; (2) persistência, que usa o nível da própria chave na janela de features como previsão.
+-- **"Sem dado"**: chaves sem registros na janela de features ficam fora da escala e fora do treino e do teste do classificador, mas permanecem no snapshot como `sem_dado`. Não há mínimo de registros: 1 registro já é dado (decisão de 2026-11-11, recomendação aceita na análise; a incerteza é declarada).
++- **"Sem dado"**: chaves sem registros na janela de features ficam fora da escala e fora do treino e do teste do classificador, mas isso não as torna `sem_dado` no snapshot: `sem_dado` no snapshot vale só para chave sem nenhum registro pontuável em jan–set (situação 1 abaixo). Não há mínimo de registros: 1 registro já é dado (decisão de 2026-11-11, recomendação aceita na análise; a incerteza é declarada).
+   - Três situações distintas, não intercambiáveis: (1) chave sem nenhum registro pontuável em jan–set → `sem_dado` no snapshot; (2) chave sem registro na janela de features de uma origem → fora do treino e do teste do classificador daquela origem; (3) chave com features e sem registro no rótulo → excluída da avaliação e contada em `resultados/` (viés de seleção).
+ - **Viés de seleção**: chave com features e sem registro no rótulo sai das métricas de nível; só 719 das 933 chaves de treino têm registro no teste. O relatório declara a contagem e o viés.
+ - **Nível do snapshot**: `pontuacao_mensal` = soma de pesos de jan–set ÷ 9 meses ÷ horas da faixa (comparável entre faixas de 3h e 6h; os rótulos de treino usam a mesma normalização); `nivel` aplica os 3 cortes do treino (D-04) a essa taxa. É o nível observado; `nivel_previsto` é a previsão de ago–set.
+@@ -101,4 +101,4 @@
+ 
+ Resolvidas em 2026-11-11: `libomp` instalado (D-01) e peso 5 para feminicídio (D-05).
+ 
+-Nenhum `NEEDS CLARIFICATION` fica aberto no plano.
++Nenhum `NEEDS CLARIFICATION` no plano; decisões pendentes do responsável estão listadas em tasks.md (T027, T020a/b).
+
+--- a/specs/001-risco-h3-faixa-horaria/spec.md	2026-11-13 09:12:48
++++ b/specs/001-risco-h3-faixa-horaria/spec.md	2026-11-13 09:30:13
+@@ -73,7 +73,7 @@
+ 
+ ### User Story 4 - Entrega auditável (Priority: P2)
+ 
+-O Nando precisa entregar repositório, notebook executado, relatório e prompts, com revisão red-team real antes da entrega e de qualquer envio intermediário, sempre com a confirmação do Nando.
++O Nando precisa entregar repositório, notebook executado, relatório e prompts, com revisão red-team real antes da entrega final; cada envio intermediário é coberto pela rodada vigente do artefato enviado, e todo envio, sempre com a confirmação do Nando.
+ 
+ **Why this priority**: sem a entrega auditável, os resultados não contam para a rubrica.
+ 
+@@ -87,7 +87,7 @@
+ 
+ ### Edge Cases
+ 
+-- Célula com poucos registros: não há mínimo; só a chave sem nenhum registro utilizável é "sem dado" (Princípio III). Chave com 1 ou 2 registros recebe nível e o relatório declara a instabilidade (178 chaves de teste têm 1 só registro).
++- Célula com poucos registros: não há mínimo; só a chave sem nenhum registro utilizável é "sem dado" (Princípio III). Chave com 1 ou 2 registros recebe nível e o relatório declara a instabilidade (a contagem de chaves de teste com 1 só registro vem de `resultados/`).
+ - Chave com features e sem registro na janela do rótulo fica fora das métricas de nível (viés de seleção: só se avalia onde houve crime); o relatório declara a contagem de chaves excluídas e esse viés.
+ - Registro com hora fora de [0,1) ou coordenada fora do retângulo de SP: quarentena.
+ - Faixa horária sem registros numa célula que tem dado em outras faixas: "sem dado" naquela chave.
+@@ -106,7 +106,7 @@
+ - **FR-006**: O sistema MUST calcular a pontuação da chave (célula + faixa) pela soma de pesos iniciais por crime, dividida pelo número de meses da janela e pelas horas da faixa (6, 6, 6, 3 e 3), na mesma fórmula para treino, teste e snapshot, (furto 1; roubo e lesão corporal 3; homicídio, feminicídio e estupro 5; tráfico, drogas para consumo e lesão corporal culposa no trânsito 1; ilícito extrapenal sem peso, fora da pontuação e contado no relatório) e converter em níveis 0–3 por quartis entre as chaves com dado do treino (nível 0 = quartil de menor pontuação; nível 3 = quartil de maior pontuação). Os cortes MUST ser calculados só com o treino (jan–jul) e reaplicados ao teste (ago–set).
+ - **FR-007**: O sistema MUST representar "sem dado" fora da escala 0–3.
+ - **FR-008**: O sistema MUST mostrar a distribuição real dos níveis ao Nando antes de aplicar o rótulo.
+-- **FR-009**: O sistema MUST dividir treino (jan–jul) e teste (ago–set) por tempo, usando a data do fato (registros com fato fora de jan–set 2026 ficam fora da modelagem e são contados como "fora da janela") e usar validação cruzada só no treino. O backtest é **retrospectivo**: o split pela data do fato controla o vazamento temporal, mas não prova que o dado já existia na origem na época (só há o arquivo atualizado em 28/10/2026). O relatório não afirma "ausência de vazamento". Ago–set é **avaliação exploratória**: a distribuição do teste foi vista na aprovação do T017, e cortes, pesos e critério já estavam fixados só com o treino e não mudaram depois. O alvo é o nível da chave em ago–set; as features de qualquer exemplo MUST usar apenas registros anteriores ao período do seu rótulo, e o rótulo de teste MUST vir só de registros de ago–set. Na validação cruzada, o treino de cada dobra MUST usar só origens cujo rótulo termina antes do início do rótulo validado (validação com expurgo, sem sobreposição de rótulo).
++- **FR-009**: O sistema MUST dividir treino (jan–jul) e teste (ago–set) por tempo, usando a data do fato (registros com fato fora de jan–set 2026 ficam fora da modelagem e são contados como "fora da janela") e usar validação cruzada só no treino. O backtest é **retrospectivo**: o split pela data do fato, a construção das features e o ajuste das transformações apenas no treino de cada dobra controlam o vazamento temporal (plan.md, princípio V), mas não prova que o dado já existia na origem na época (só há o arquivo atualizado em 28/10/2026). O relatório não afirma "ausência de vazamento". Ago–set é **avaliação exploratória**: a distribuição do teste foi vista na aprovação do T017, e cortes, pesos e critério já estavam fixados só com o treino e não mudaram depois. O alvo é o nível da chave em ago–set; as features de qualquer exemplo MUST usar apenas registros anteriores ao período do seu rótulo, e o rótulo de teste MUST vir só de registros de ago–set. Na validação cruzada, o treino de cada dobra MUST usar só origens cujo rótulo termina antes do início do rótulo validado (validação com expurgo, sem sobreposição de rótulo).
+ - **FR-010**: O sistema MUST comparar com uma linha de base simples, avaliar ao menos 10 combinações de 3 hiperparâmetros e justificar o modelo escolhido entre XGBoost, RF, MLP, LSTM e KMeans+PCA. Executados: RF, XGBoost e MLP; LSTM e KMeans+PCA são declarados "não executados" com justificativa, sujeito à confirmação do Nando (research D-06).
+ - **FR-011**: O sistema MUST gerar snapshot versionado com checksum e uma fixture para o contrato com o Abner.
+ - **FR-012**: O relatório MUST conter apenas números rastreáveis a execuções reais e MUST evitar "tempo real" e "rota/local seguro".
+@@ -129,7 +129,7 @@
+ 
+ - **SC-001**: Duas ingestões do mesmo raw geram snapshots com checksum idêntico.
+ - **SC-002**: 100% das linhas de entrada são reconciliadas: usadas + quarentena + duplicata removida + fora da janela.
+-- **SC-003**: Nenhuma data de teste é anterior à última data de treino (controle temporal por data do fato; backtest retrospectivo).
++- **SC-003**: Nenhuma data de teste é anterior à última data de treino, nenhuma data de feature é igual ou posterior ao início do rótulo, e as transformações são ajustadas só no treino de cada dobra (controle temporal por data do fato; backtest retrospectivo).
+ - **SC-004**: Nenhuma chave "sem dado" aparece com nível 0 no snapshot.
+ - **SC-005**: Toda métrica do relatório é reproduzida pela execução do notebook.
+ - **SC-006**: Os seis critérios de aceite A1–A6 de `docs/SPEC-ML.md` §7 são atendidos até 16/11 (congelamento) e 19/11 às 23h55 (entrega).
+@@ -138,6 +138,6 @@
+ 
+ - O centro do perímetro é aproximado (-23,5646; -46,6522); a coordenada exata da FIAP Paulista está pendente e não altera o perímetro de 5×5 km de forma relevante (~50 m).
+ - Os pesos iniciais (furto 1; roubo e lesão corporal 3; homicídio, feminicídio e estupro 5; tráfico, drogas para consumo e lesão corporal culposa no trânsito 1) são ponto de partida, sujeitos à sua revisão. Ilícito extrapenal (49 registros no perímetro) fica fora da pontuação.
+-- A base cobre ocorrências até 30/09/2026; o mês de setembro é incompleto (~73 mil contra ~85 mil por mês) e isso é declarado.
++- A base cobre ocorrências até 30/09/2026; o mês de setembro pode estar incompleto (~73 mil contra ~85 mil por mês; hipótese, sem evidência de cobertura) e isso é declarado.
+ - O app e a API do Abner ficam fora deste repositório; o contrato é a chave de risco, o snapshot e a fixture.
+ - Fora de escopo: campo que identifique pessoa nos derivados e entregas, "tempo real", "rota segura", qualquer envio sem confirmação.
+
+--- a/specs/001-risco-h3-faixa-horaria/tasks.md	2026-11-13 09:12:48
++++ b/specs/001-risco-h3-faixa-horaria/tasks.md	2026-11-13 09:30:17
+@@ -59,7 +59,7 @@
+ - [X] T015 [P] [US1] `tests/test_idempotencia.py`: duas execuções sobre o mesmo raw geram CSV com hash idêntico (SC-001)
+ 
+ ### Implementação
+-- [X] T016 [US1] `ml/rotulo.py`: pontuação mensal por chave (soma de pesos de `ml/config.py` dividida pelo número de meses da janela e pelas horas da faixa: 6, 6, 6, 3, 3); rubricas sem peso fora da pontuação e contadas em `ml/dados/resultados/rubricas_sem_peso.csv`; 3 cortes de quartil dos rótulos de treino; níveis 0–3; "sem dado" fora da escala, só para chave sem nenhum registro (sem mínimo; 1 registro já é dado, e a incerteza é declarada); contar em `resultados/` as chaves com features e sem registro no rótulo (viés de seleção); nível do snapshot = soma de pesos de jan–set ÷ 9 meses ÷ horas da faixa (6, 6, 6, 3, 3), a mesma fórmula do treino, aplicada aos cortes do treino; teste numérico: 54 pontos em 9 meses = 1,0/mês/hora numa faixa de 6 h e 2,0 numa de 3 h
++- [X] T016 [US1] `ml/rotulo.py`: pontuação mensal por chave (soma de pesos de `ml/config.py` dividida pelo número de meses da janela e pelas horas da faixa: 6, 6, 6, 3, 3); rubricas sem peso fora da pontuação e contadas em `ml/dados/resultados/rubricas_sem_peso.csv`; 3 cortes de quartil dos rótulos de treino; níveis 0–3; "sem dado" fora da escala, só para chave sem nenhum registro pontuável em jan–set (rubrica sem peso não conta; testes: chave só com rubrica sem peso, chave nova em ago–set e chave com histórico sem alvo; sem mínimo; 1 registro já é dado, e a incerteza é declarada); contar em `resultados/` as chaves com features e sem registro no rótulo (viés de seleção); nível do snapshot = soma de pesos de jan–set ÷ 9 meses ÷ horas da faixa (6, 6, 6, 3, 3), a mesma fórmula do treino, aplicada aos cortes do treino; teste numérico: 54 pontos em 9 meses = 1,0/mês/hora numa faixa de 6 h e 2,0 numa de 3 h
+ - [X] T017 [US1] [Nando] Mostrar a distribuição real dos níveis (treino, teste e snapshot) e os 3 cortes, e esperar a aprovação dele antes de gerar o snapshot (FR-008); registrar no resultado o hash do manifest e a configuração (pesos, cortes, janela) aprovados
+ - [X] T018 [US1] `ml/snapshot.py`: gerar `ml/dados/snapshot/risco_h3_faixa_v1.csv`, `.sha256`, `manifest.json` (campos do contrato, incluindo fuso, faixas, resolução, centro e tamanho do perímetro, total de linhas e fórmula; CSV sem `nivel_previsto`, com o aviso "melhor dado disponível no período") e `fixture_v1.json` (15 linhas, 3 células vizinhas × 5 faixas, com ao menos 1 `sem_dado`), tudo a partir do dado real e sem timestamp dentro do CSV
+ - [X] T019 [US1] Rodar o snapshot duas vezes, conferir hash idêntico, os 4 invariantes do contrato e que `SHA256(CSV)` = conteúdo do `.sha256` = `manifest.csv_sha256`; o hash dos bytes do `manifest.json` aprovado no T017 é registrado à parte, porque `gerado_em` muda a cada geração
+@@ -75,7 +75,7 @@
+ **Independent Test**: nenhum registro de ago–set entra nas features de teste (SC-003) e todo número do relatório vem de execução.
+ 
+ ### Testes primeiro
+-- [ ] T021 [P] [US3] `tests/test_split_temporal.py`: para T1 a T4 e Teste, nenhuma data de feature é posterior ao início da janela do rótulo; na CV com expurgo, nenhuma origem de treino tem rótulo que toque o mês do rótulo validado; o rótulo de teste vem só de ago–set; nenhuma data de teste anterior à última de treino (SC-003, FR-009)
++- [ ] T021 [P] [US3] `tests/test_split_temporal.py`: para T1 a T4 e Teste, `data_feature < inicio_rotulo` (estritamente anterior); transformações ajustadas só no treino da dobra; features passadas invariantes a alterações dos registros futuros; na CV com expurgo, nenhuma origem de treino tem rótulo que toque o mês do rótulo validado; o rótulo de teste vem só de ago–set; nenhuma data de teste anterior à última de treino (SC-003, FR-009)
+ - [ ] T022 [P] [US3] `tests/test_features_taxas.py`: taxas mensais iguais para janelas de tamanhos diferentes com a mesma intensidade; chave sem registro na janela de features fica fora do classificador
+ 
+ ### Implementação
+@@ -90,12 +90,12 @@
+ 
+ ## Phase 6: US4 — Entrega auditável (P2)
+ 
+-**Goal**: repositório, notebook executado, relatório e prompts, com red-team real antes da entrega e de qualquer envio intermediário, sempre com a confirmação do Nando.
++**Goal**: repositório, notebook executado, relatório e prompts, com red-team real antes da entrega final; cada envio intermediário (T020a/T020b: contrato e fixture ao Abner) é coberto pelo red-team da rodada vigente do contrato, e todo envio, sempre com a confirmação do Nando.
+ 
+ **Independent Test**: lista A1 a A6 de `docs/SPEC-ML.md` §7 conferida e relatório real do Codex CLI anexado.
+ 
+ - [ ] T029 [US4] `notebooks/hoodi_ml.ipynb` cobrindo ingestão, rótulo, features, modelos e snapshot; executar com `.venv311/bin/jupyter nbconvert --to notebook --execute --inplace notebooks/hoodi_ml.ipynb` e manter as saídas gravadas (A1)
+-- [ ] T030 [P] [US4] `ml/dados/README.md`: fonte oficial SSP-SP, nome do arquivo, sha256, descrição dos campos, destinos e quarentena, janela de dados, perímetro e a reconciliação de T011 (A2); inventário de privacidade por camada (conteúdo, acesso, retenção e descarte, incluindo logs, notebook e prompts) e teste `tests/test_schemas_derivados.py` que lê os parquets derivados reais e falha se houver `bo_id`, `NUM_BO`, endereço, bairro ou delegacia; sensibilidade do centro do perímetro (deslocar ±100 m e contar as células cujo nível muda)
++- [ ] T030 [P] [US4] `ml/dados/README.md`: fonte oficial SSP-SP, nome do arquivo, sha256, descrição dos campos, destinos e quarentena, janela de dados, perímetro e a reconciliação de T011 (A2); inventário de privacidade por camada (conteúdo, acesso, retenção e descarte, incluindo logs, notebook e prompts) e teste `tests/test_schemas_derivados.py` que lê os parquets derivados reais e falha se houver `bo_id`, `NUM_BO`, endereço, bairro, delegacia, `lat`, `lon`, `latitude` ou `longitude` em `processed/` (inventariar e regenerar `usadas.parquet`, que hoje contém `lat` e `lon`); sensibilidade do centro do perímetro (deslocar ±100 m e contar as células cujo nível muda)
+ - [ ] T031 [P] [US4] Atualizar `prompts.md` com uma entrada datada por sessão de trabalho (A5), resumindo o prompt e o uso do resultado
+ - [ ] T032 [P] [US4] [Nando] `README.md` com a Ficha da CitizenTech e os ODS (A4): pedir a ele o conteúdo da Ficha e dos ODS já em 2026-11-12, sem esperar o final, que não estão em nenhum arquivo do projeto, e não inventar
+ - [ ] T033 [US4] `RELATORIO_ML.md` de 2 a 4 páginas, só com números das saídas do notebook, incluindo o limite do dado ("% de dado utilizável", setembro incompleto, pesos como ponto de partida, rubricas sem peso, desbalanceamento, chaves de teste com 1 só registro (contagem lida de `resultados/`, sem número fixo), chaves excluídas por falta de rótulo e o viés de seleção) (A3). Redação obrigatória: o snapshot é "mapa histórico observado + experimento retrospectivo", nunca previsão; o backtest é retrospectivo e não afirma "ausência de vazamento"; ago–set é avaliação exploratória (visto no T017); sensibilidade aos pesos (todos iguais a 1; 1/2/3) reportada sem escolher pesos por ago–set; "risco" descrito como intensidade registrada; proveniência do raw declarada com o que foi e o que não foi verificado

@@ -1,0 +1,67 @@
+diff -ruN a/.specify/memory/constitution.md b/.specify/memory/constitution.md
+--- a/.specify/memory/constitution.md	2026-11-12 05:47:36
++++ b/.specify/memory/constitution.md	2026-11-12 05:47:36
+@@ -1,6 +1,6 @@
+ # Constituição do ML do hoodi
+ 
+-Versão 1.1.0 · ratificada em 2026-11-11 pelo Nando (Fernando Antonio) · emendada em 2026-11-11 (princípio I, decisão do Nando) · repositório separado da API .NET.
++Versão 1.2.0 · ratificada em 2026-11-11 pelo Nando (Fernando Antonio) · emendada em 2026-11-11 (princípio I) e em 2026-11-12 (princípio VII), ambas por decisão do Nando · repositório separado da API .NET.
+ 
+ ## Princípios
+ 
+@@ -23,7 +23,7 @@
+ Registro malformado ou conflitante vai para a quarentena, sinalizado e não descartado. Ingestão idempotente: reexecutar não duplica nem muda o resultado.
+ 
+ ### VII. Privacidade e confirmação humana
+-Nenhum dado pessoal. Nenhum envio ou publicação sem confirmação do Nando. Revisão red-team real (Codex CLI) antes da entrega; simulação própria não vale.
++Nenhum campo que identifique pessoa nos derivados e nas entregas (processed, features, rótulos, snapshot, fixture, notebook, relatório, prompts); sem `bo_id`, número de BO, endereço, bairro, logradouro ou coordenada exata fora do raw/interim/quarentena. O raw público da SSP-SP e o interim ficam como cópia fiel fora do git, sem entrega, com retenção até a entrega; o inventário por camada fica em `ml/dados/README.md`. Nenhum envio ou publicação sem confirmação do Nando. Revisão red-team real (Codex CLI) antes da entrega; simulação própria não vale.
+ 
+ ## Governança
+ Mudança nesta constituição exige decisão explícita do Nando e novo número de versão.
+diff -ruN a/specs/001-risco-h3-faixa-horaria/data-model.md b/specs/001-risco-h3-faixa-horaria/data-model.md
+--- a/specs/001-risco-h3-faixa-horaria/data-model.md	2026-11-12 05:47:36
++++ b/specs/001-risco-h3-faixa-horaria/data-model.md	2026-11-12 05:47:36
+@@ -9,7 +9,7 @@
+ ### Registro de ocorrência (uma linha da base, um crime registrado)
+ | Campo | Origem | Regra |
+ |---|---|---|
+-| `bo_id` | `NUM_BO` + `ANO_BO` + `NOME_DELEGACIA` | identifica o BO; um BO pode ter várias linhas |
++| `bo_id` (só em memória) | `NUM_BO` + `ANO_BO` + `NOME_DELEGACIA` | usado só para deduplicar; nunca gravado em processed, quarentena, features, rótulos nem snapshot (constituição VII) |
+ | `rubrica` | `RUBRICA` | tipo de crime; define o peso |
+ | `data_fato` | `DATA_OCORRENCIA_BO` (serial Excel) | define o mês e o split |
+ | `hora` | `HORA_OCORRENCIA_BO` | fração do dia em [0,1); válida só nesse intervalo |
+diff -ruN a/specs/001-risco-h3-faixa-horaria/spec.md b/specs/001-risco-h3-faixa-horaria/spec.md
+--- a/specs/001-risco-h3-faixa-horaria/spec.md	2026-11-12 05:47:36
++++ b/specs/001-risco-h3-faixa-horaria/spec.md	2026-11-12 05:47:36
+@@ -103,7 +103,7 @@
+ - **FR-003**: O sistema MUST recortar o perímetro de 5×5 km em torno da FIAP Paulista e atribuir cada registro a uma célula H3 res. 9 e a uma de 5 faixas (0–6, 6–12, 12–18, 18–21, 21–24).
+ - **FR-004**: O sistema MUST enviar à quarentena sinalizada registros sem coordenada ou hora utilizável e BOs com coordenada ou hora conflitante, e reportar a perda como "% de dado utilizável".
+ - **FR-005**: O sistema MUST tratar cada linha como um crime registrado, removendo apenas a linha idêntica de mesmo BO e rubrica.
+-- **FR-006**: O sistema MUST calcular a pontuação da chave (célula + faixa) pela soma de pesos iniciais por crime (furto 1; roubo e lesão corporal 3; homicídio, feminicídio e estupro 5; tráfico, drogas para consumo e lesão corporal culposa no trânsito 1; ilícito extrapenal sem peso, fora da pontuação e contado no relatório) e converter em níveis 0–3 por quartis entre as chaves com dado do treino (nível 0 = quartil de menor pontuação; nível 3 = quartil de maior pontuação). Os cortes MUST ser calculados só com o treino (jan–jul) e reaplicados ao teste (ago–set).
++- **FR-006**: O sistema MUST calcular a pontuação da chave (célula + faixa) pela soma de pesos iniciais por crime, dividida pelo número de meses da janela e pelas horas da faixa (6, 6, 6, 3 e 3), na mesma fórmula para treino, teste e snapshot, (furto 1; roubo e lesão corporal 3; homicídio, feminicídio e estupro 5; tráfico, drogas para consumo e lesão corporal culposa no trânsito 1; ilícito extrapenal sem peso, fora da pontuação e contado no relatório) e converter em níveis 0–3 por quartis entre as chaves com dado do treino (nível 0 = quartil de menor pontuação; nível 3 = quartil de maior pontuação). Os cortes MUST ser calculados só com o treino (jan–jul) e reaplicados ao teste (ago–set).
+ - **FR-007**: O sistema MUST representar "sem dado" fora da escala 0–3.
+ - **FR-008**: O sistema MUST mostrar a distribuição real dos níveis ao Nando antes de aplicar o rótulo.
+ - **FR-009**: O sistema MUST dividir treino (jan–jul) e teste (ago–set) por tempo, usando a data do fato (registros com fato fora de jan–set 2026 ficam fora da modelagem e são contados como "fora da janela") e usar validação cruzada só no treino. O backtest é **retrospectivo**: o split pela data do fato controla o vazamento temporal, mas não prova que o dado já existia na origem na época (só há o arquivo atualizado em 28/10/2026). O relatório não afirma "ausência de vazamento". Ago–set é **avaliação exploratória**: a distribuição do teste foi vista na aprovação do T017, e cortes, pesos e critério já estavam fixados só com o treino e não mudaram depois. O alvo é o nível da chave em ago–set; as features de qualquer exemplo MUST usar apenas registros anteriores ao período do seu rótulo, e o rótulo de teste MUST vir só de registros de ago–set. Na validação cruzada, o treino de cada dobra MUST usar só origens cujo rótulo termina antes do início do rótulo validado (validação com expurgo, sem sobreposição de rótulo).
+diff -ruN a/specs/001-risco-h3-faixa-horaria/tasks.md b/specs/001-risco-h3-faixa-horaria/tasks.md
+--- a/specs/001-risco-h3-faixa-horaria/tasks.md	2026-11-12 05:47:36
++++ b/specs/001-risco-h3-faixa-horaria/tasks.md	2026-11-12 05:47:36
+@@ -41,7 +41,7 @@
+ - [X] T009 [P] [US2] `tests/test_janela.py`: fato fora de jan–set 2026 vira `fora_da_janela` com motivo; coordenada válida fora do perímetro vira `fora_da_janela` com motivo `fora_do_perimetro`; o split usa a data do fato (FR-009)
+ 
+ ### Implementação
+-- [X] T010 [US2] `ml/ingestao.py`: ler os parquets com duckdb, converter data (serial Excel) e hora, calcular `faixa` (bordas explícitas) e `celula` (`h3.latlng_to_cell(lat, lon, 9)`), atribuir `destino` exclusivo (`usada`, `quarentena`, `duplicata_removida`, `fora_da_janela`) e `motivo` conforme [data-model.md](data-model.md); manter em `processed/` só as colunas necessárias (sem `NUM_BO` em claro além do `bo_id` interno, nem outro dado pessoal) e gravar `ml/dados/processed/` e `ml/dados/quarantine/` (FR-013)
++- [X] T010 [US2] `ml/ingestao.py`: ler os parquets com duckdb, converter data (serial Excel) e hora, calcular `faixa` (bordas explícitas) e `celula` (`h3.latlng_to_cell(lat, lon, 9)`), atribuir `destino` exclusivo (`usada`, `quarentena`, `duplicata_removida`, `fora_da_janela`) e `motivo` conforme [data-model.md](data-model.md); manter em `processed/` só as colunas necessárias (sem `bo_id`, `NUM_BO` nem outro identificador de BO; o `bo_id` existe só em memória durante a deduplicação e nunca é gravado; quarentena sem coordenada) e gravar `ml/dados/processed/` e `ml/dados/quarantine/` (FR-013)
+ - [X] T011 [US2] Executar a ingestão no dado real, gravar `ml/dados/reconciliacao.txt` com a contagem por destino e o "% de dado utilizável", e conferir a reconciliação exata; comparar com [research.md](research.md) (20.350 registros na janela) e explicar qualquer diferença pela quarentena de BOs conflitantes
+ 
+ **Checkpoint**: US2 completa e testável sozinha.
+@@ -59,8 +59,8 @@
+ - [X] T015 [P] [US1] `tests/test_idempotencia.py`: duas execuções sobre o mesmo raw geram CSV com hash idêntico (SC-001)
+ 
+ ### Implementação
+-- [X] T016 [US1] `ml/rotulo.py`: pontuação mensal por chave (soma de pesos de `ml/config.py` dividida pelo número de meses da janela e pelas horas da faixa: 6, 6, 6, 3, 3); rubricas sem peso fora da pontuação e contadas em `ml/dados/resultados/rubricas_sem_peso.csv`; 3 cortes de quartil dos rótulos de treino; níveis 0–3; "sem dado" fora da escala, só para chave sem nenhum registro (sem mínimo; 1 registro já é dado, e a incerteza é declarada); contar em `resultados/` as chaves com features e sem registro no rótulo (viés de seleção); nível do snapshot = soma de pesos de jan–set ÷ 9 aplicada aos cortes do treino
+-- [X] T017 [US1] [Nando] Mostrar a distribuição real dos níveis (treino, teste e snapshot) e os 3 cortes, e esperar a aprovação dele antes de gerar o snapshot (FR-008)
++- [X] T016 [US1] `ml/rotulo.py`: pontuação mensal por chave (soma de pesos de `ml/config.py` dividida pelo número de meses da janela e pelas horas da faixa: 6, 6, 6, 3, 3); rubricas sem peso fora da pontuação e contadas em `ml/dados/resultados/rubricas_sem_peso.csv`; 3 cortes de quartil dos rótulos de treino; níveis 0–3; "sem dado" fora da escala, só para chave sem nenhum registro (sem mínimo; 1 registro já é dado, e a incerteza é declarada); contar em `resultados/` as chaves com features e sem registro no rótulo (viés de seleção); nível do snapshot = soma de pesos de jan–set ÷ 9 meses ÷ horas da faixa (6, 6, 6, 3, 3), a mesma fórmula do treino, aplicada aos cortes do treino; teste numérico: 54 pontos em 9 meses = 1,0/mês/hora numa faixa de 6 h e 2,0 numa de 3 h
++- [X] T017 [US1] [Nando] Mostrar a distribuição real dos níveis (treino, teste e snapshot) e os 3 cortes, e esperar a aprovação dele antes de gerar o snapshot (FR-008); registrar no resultado o hash do manifest e a configuração (pesos, cortes, janela) aprovados
+ - [X] T018 [US1] `ml/snapshot.py`: gerar `ml/dados/snapshot/risco_h3_faixa_v1.csv`, `.sha256`, `manifest.json` (campos do contrato, incluindo fuso, faixas, resolução, centro e tamanho do perímetro, total de linhas e fórmula; CSV sem `nivel_previsto`, com o aviso "melhor dado disponível no período") e `fixture_v1.json` (15 linhas, 3 células vizinhas × 5 faixas, com ao menos 1 `sem_dado`), tudo a partir do dado real e sem timestamp dentro do CSV
+ - [X] T019 [US1] Rodar o snapshot duas vezes, conferir hash idêntico, os 4 invariantes do contrato e que o hash do `manifest.json` bate com o do `.sha256`
+ - [ ] T020a [US1] [Nando] Até 11/11 12h: enviar ao Abner só o contrato (chave de risco, janela, colunas, 5 faixas, `sem_dado` explícito, formato CSV + JSON, o rascunho de [contracts/snapshot-risco.md](contracts/snapshot-risco.md)) e perguntar o que cada prazo exige; só depois da aprovação dele. Pode rodar antes de T017

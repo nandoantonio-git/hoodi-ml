@@ -1,0 +1,30 @@
+Base inteira                       n= 814,900  coord= 77.6%  hora= 67.4%  ambas= 52.8% (429,908)  ambas&perímetro=20,657
+  aba JAN-JUN                      n= 555,404  coord= 76.1%  hora= 69.3%  ambas= 53.8% (298,867)  ambas&perímetro=13,674
+  aba JUL-DEZ                      n= 259,496  coord= 80.8%  hora= 63.3%  ambas= 50.5% (131,041)  ambas&perímetro=6,983
+Município S.PAULO                  n= 330,690  coord= 86.8%  hora= 64.2%  ambas= 56.1% (185,546)  ambas&perímetro=20,643
+  S.PAULO, só ocorrência 2026      n= 322,966  coord= 87.0%  hora= 64.5%  ambas= 56.4% (182,045)  ambas&perímetro=20,336
+coord fora do retângulo do estado (não-zero, numérica): (199,)
+BOs distintos (num+ano+delegacia): (805179,)
+Ocorrência anterior a 2026 (data real do fato): (22222,)
+Cobertura temporal do fato em 2026 (mês):
+   ('2026-01', 89772)
+   ('2026-02', 88186)
+   ('2026-03', 97659)
+   ('2026-04', 93796)
+   ('2026-05', 92364)
+   ('2026-06', 85762)
+   ('2026-07', 87235)
+   ('2026-08', 84809)
+   ('2026-09', 73092)
+   ('2026-10', 3)
+Perímetro: bbox lat -23.58706 -23.54214 lon -46.67671 -46.62769
+Perímetro, registros brutos com coord ok (sem exigir hora): (34769,)
+Perímetro, RUBRICA (coord+hora ok):
+   ('Furto (art. 155)', 13772)
+   ('Roubo (art. 157)', 4757)
+   ('Lesão corporal (art. 129)', 1052)
+   ('Lesão corporal culposa na direção de veículo automotor (Art. 303)', 528)
+   ('tráfico drogas (Art.33, caput)', 339)
+   ('Drogas para consumo pessoal sem autorização ou em desacordo (Art.28,caput)', 53)
+   ('ilícito extrapenal (tema 506 STF)', 49)
+   ('Homicídio (art. 121)', 31)
