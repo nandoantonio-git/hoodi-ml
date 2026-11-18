@@ -1,0 +1,27 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  contrato:
+    # Testes que usam só arquivos versionados (snapshot v2/v3, política, vetores de rota). Os testes de treino precisam
+    # da base bruta da SSP-SP, que não é versionada, e rodam localmente (ver README).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: requirements-ci.txt
+      - run: pip install -r requirements-ci.txt
+      - name: pacotes do contrato (v2 e v3) e derivados
+        run: python -m pytest tests/test_snapshot.py tests/test_snapshot_v3.py tests/test_snapshot_carro_candidato.py tests/test_derivados_v3.py tests/test_politica_proximidade.py tests/test_rota.py tests/test_schemas_derivados.py -q
+      - name: hashes publicados conferem com os arquivos
+        run: |
+          set -e
+          for d in ml/dados/snapshot ml/dados/snapshot_v3; do
+            (cd "$d" && sha256sum -c ./*.sha256)
+          done
+          (cd docs/contratos-v3 && sha256sum -c ./*.sha256)

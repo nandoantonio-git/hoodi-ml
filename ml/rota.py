@@ -24,6 +24,12 @@ LIMITE_INSUFICIENTE = 30.0  # % do trajeto sem dado ou fora da cobertura; regra 
 ROTULO = "pontuação acumulada observada, jan–set/2026 (retrospectiva), demonstração não validada"
 UNIDADE = "pontos/(mês·hora) × km"
 SNAPSHOT_CSV = C.SNAPSHOT / "risco_h3_faixa_v2.csv"
+# Por versão do contrato do snapshot: CSV, nome dos vetores e janela citada no rótulo da pontuação.
+VERSOES = {
+    2: dict(pasta=C.SNAPSHOT, csv="risco_h3_faixa_v2.csv", nome="vetores_rota_v2.json", janela="jan–set/2026"),
+    3: dict(pasta=C.DADOS / "snapshot_v3", csv="risco_h3_faixa_v3.csv", nome="vetores_rota_v3.json",
+            janela="abr–set/2026"),
+}
 DESTINO = C.RAIZ / "docs" / "contratos-v3"
 
 
@@ -45,14 +51,14 @@ def _validar(pontos):
     for p in pontos:
         try:
             if len(p) != 2:
-                raise RotaInvalida(f"ponto deve ter exatamente (lat, lon): {p!r}")
+                raise RotaInvalida("ponto deve ter exatamente (lat, lon)")
             lat, lon = float(p[0]), float(p[1])
         except RotaInvalida:
             raise
         except (TypeError, ValueError) as e:
-            raise RotaInvalida(f"ponto malformado: {p!r}") from e
+            raise RotaInvalida("ponto malformado") from e
         if not (math.isfinite(lat) and math.isfinite(lon)) or not (-90 <= lat <= 90) or not (-180 <= lon < 180):
-            raise RotaInvalida(f"coordenada fora dos limites: {p}")
+            raise RotaInvalida("coordenada fora dos limites")
         if not limpos or limpos[-1] != (lat, lon):  # remove pontos consecutivos idênticos
             limpos.append((lat, lon))
     if len(limpos) < 2:
@@ -293,21 +299,38 @@ def vetores(snap: pd.DataFrame, snapshot_sha256: str) -> dict:
     )
 
 
-def gravar(destino=DESTINO) -> dict:
+def _trocar_janela(obj, de: str, para: str):
+    """Troca a janela citada no rótulo de cada resultado; a conta nunca usa o texto."""
+    if isinstance(obj, dict):
+        return {k: _trocar_janela(v, de, para) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_trocar_janela(v, de, para) for v in obj]
+    return obj.replace(de, para) if isinstance(obj, str) and obj == ROTULO else obj
+
+
+def gravar(destino=DESTINO, contrato: int = 2) -> dict:
+    ver = VERSOES[contrato]
+    csv = ver["pasta"] / ver["csv"]
     destino = Path(destino)
     destino.mkdir(parents=True, exist_ok=True)
-    snap = pd.read_csv(SNAPSHOT_CSV, dtype={"h3_cell": str})
-    h_snap = hashlib.sha256(SNAPSHOT_CSV.read_bytes()).hexdigest()
+    snap = pd.read_csv(csv, dtype={"h3_cell": str})
+    h_snap = hashlib.sha256(csv.read_bytes()).hexdigest()
+    manifest = json.loads((ver["pasta"] / "manifest.json").read_text())
+    assert manifest["csv_sha256"] == h_snap and manifest["contrato_versao"] == contrato, f"snapshot diverge do manifest v{contrato}"
     v = vetores(snap, h_snap)
-    arq = destino / "vetores_rota_v2.json"
+    if contrato != 2:
+        v = _trocar_janela(v, "jan–set/2026", ver["janela"])
+        v["contrato_snapshot_versao"] = contrato
+    arq = destino / ver["nome"]
     arq.write_text(json.dumps(v, ensure_ascii=False, indent=2) + "\n")
     h = hashlib.sha256(arq.read_bytes()).hexdigest()
-    (destino / "vetores_rota_v2.json.sha256").write_text(f"{h}  {arq.name}\n")
+    (destino / f"{ver['nome']}.sha256").write_text(f"{h}  {arq.name}\n")
     return dict(arquivo=str(arq), sha256=h, vetores=v)
 
 
 if __name__ == "__main__":
-    r = gravar()
+    import sys
+    r = gravar(contrato=int(sys.argv[1]) if len(sys.argv) > 1 else 2)
     print(r["arquivo"], r["sha256"])
     for cs in r["vetores"]["casos"]:
         for s in cs["rotas"]:

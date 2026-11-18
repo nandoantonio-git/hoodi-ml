@@ -1,0 +1,2 @@
+pares: 600
+pares L×L: 29819 concordância hist: 0.762 persistência: 0.716 dif km média: 0.0001

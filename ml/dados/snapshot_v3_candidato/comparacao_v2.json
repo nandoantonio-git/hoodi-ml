@@ -1,0 +1,24 @@
+{
+  "chaves_v3": 1395,
+  "chaves_v2": 1395,
+  "so_em_um": 0,
+  "com_dado_v2": 954,
+  "com_dado_v3": 1132,
+  "ganhou_dado": 178,
+  "perdeu_dado": 0,
+  "nivel_igual": 0.666,
+  "nivel_difere_ate_1": 0.987,
+  "spearman_pontuacao": 0.938,
+  "distribuicao_nivel_v2": {
+    "0": 272,
+    "1": 207,
+    "2": 275,
+    "3": 200
+  },
+  "distribuicao_nivel_v3": {
+    "0": 150,
+    "1": 253,
+    "2": 288,
+    "3": 263
+  }
+}

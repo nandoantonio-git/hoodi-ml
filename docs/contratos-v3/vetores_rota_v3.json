@@ -1,0 +1,1121 @@
+{
+  "contrato": "docs/contratos-v3/rota_pontuacao_v1.md",
+  "versao_vetores": 2,
+  "test_seen": true,
+  "natureza": "referência para validação da implementação C#; demonstração retrospectiva não validada",
+  "snapshot_csv_sha256": "e33bd004ffcf0c47378ef0c9518bdf19a9ea84ca007222d798a2003a7c71c0da",
+  "h3_core_c": "4.5.0",
+  "resolucao": 9,
+  "constantes": {
+    "R_terra_m": 6371008.8,
+    "passo_m": 5.0,
+    "tol_rel_empate": 1e-09,
+    "limite_dado_insuficiente_pct": 30.0
+  },
+  "aceite": {
+    "celulas": "igualdade exata",
+    "metros": "|Δ| <= 0,01 m",
+    "indice": "|Δ| <= 1e-6 relativo"
+  },
+  "casos": [
+    {
+      "nome": "1_toda_com_dado",
+      "descricao": "duas células com_dado vizinhas, centro a centro",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55770344834097,
+                -46.63206653567886
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 179.50141018607195,
+              "metros_exibicao": 179.5
+            },
+            {
+              "h3_cell": "89a8100c007ffff",
+              "metros": 179.50224625638458,
+              "metros_exibicao": 179.5
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 0.6980637598530649,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.9444474932944176,
+            "km_total": 0.3590036564424565,
+            "km_com_dado": 0.3590036564424565,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 0.698064,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.944447,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 359.0,
+            "metros_com_dado": 359.0
+          }
+        }
+      ]
+    },
+    {
+      "nome": "2_trecho_sem_dado",
+      "descricao": "de uma célula com_dado a uma vizinha sem_dado",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.557986188013466,
+                -46.62595344699033
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 173.5217002458853,
+              "metros_exibicao": 173.52
+            },
+            {
+              "h3_cell": "89a8100c00bffff",
+              "metros": 178.48022563096467,
+              "metros_exibicao": 178.48
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 0.07712067854408225,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 0.444444,
+            "km_total": 0.35200192587685003,
+            "km_com_dado": 0.1735217002458853,
+            "pct_sem_dado": 50.704332138627855,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 0.077121,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 0.444444,
+            "pct_sem_dado": 50.704332,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 352.0,
+            "metros_com_dado": 173.52
+          }
+        }
+      ]
+    },
+    {
+      "nome": "3_sai_do_perimetro",
+      "descricao": "do centro de uma célula até ponto fora do snapshot",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.52937804586215,
+                -46.62905519645476
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 169.78889496750406,
+              "metros_exibicao": 169.79
+            },
+            {
+              "h3_cell": "89a8100c00fffff",
+              "metros": 344.5715809634643,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c077ffff",
+              "metros": 339.57778993465445,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c067ffff",
+              "metros": 339.5777899346546,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c39bffff",
+              "metros": 344.57158096275714,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c38bffff",
+              "metros": 339.5777899353619,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c313ffff",
+              "metros": 339.57778993465456,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c303ffff",
+              "metros": 344.5715809627571,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c30fffff",
+              "metros": 339.57778993500835,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c377ffff",
+              "metros": 344.57158096311053,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c367ffff",
+              "metros": 89.88823851220803,
+              "metros_exibicao": 89.89
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 2.017491615445709,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.074468106383136,
+            "km_total": 3.335852407006135,
+            "km_com_dado": 1.8776654266983965,
+            "pct_sem_dado": 10.179640718559826,
+            "pct_fora_da_cobertura": 33.53293413172962,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 2.017492,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.074468,
+            "pct_sem_dado": 10.179641,
+            "pct_fora_da_cobertura": 33.532934,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 3335.85,
+            "metros_com_dado": 1877.67
+          }
+        }
+      ]
+    },
+    {
+      "nome": "4_cruza_bordas",
+      "descricao": "três células em sequência (cruza duas bordas)",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55770344834097,
+                -46.63206653567886
+              ],
+              [
+                -23.55602877282228,
+                -46.635077834141946
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 179.50141018607195,
+              "metros_exibicao": 179.5
+            },
+            {
+              "h3_cell": "89a8100c007ffff",
+              "metros": 359.005801776969,
+              "metros_exibicao": 359.01
+            },
+            {
+              "h3_cell": "89a8100c033ffff",
+              "metros": 179.50439155101847,
+              "metros_exibicao": 179.5
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 2.218861935388205,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 3.0902870155980113,
+            "km_total": 0.7180116035140593,
+            "km_com_dado": 0.7180116035140593,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 2.218862,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 3.090287,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 718.01,
+            "metros_com_dado": 718.01
+          }
+        }
+      ]
+    },
+    {
+      "nome": "5_empate_e_ranking",
+      "descricao": "mesma rota nos dois sentidos (empate → km → índice) e uma rota com dado insuficiente",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55770344834097,
+                -46.63206653567886
+              ],
+              [
+                -23.55602877282228,
+                -46.635077834141946
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 179.50141018607195,
+              "metros_exibicao": 179.5
+            },
+            {
+              "h3_cell": "89a8100c007ffff",
+              "metros": 359.005801776969,
+              "metros_exibicao": 359.01
+            },
+            {
+              "h3_cell": "89a8100c033ffff",
+              "metros": 179.50439155101847,
+              "metros_exibicao": 179.5
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 2.218861935388205,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 3.0902870155980113,
+            "km_total": 0.7180116035140593,
+            "km_com_dado": 0.7180116035140593,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 2.218862,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 3.090287,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 718.01,
+            "metros_com_dado": 718.01
+          }
+        },
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55602877282228,
+                -46.635077834141946
+              ],
+              [
+                -23.55770344834097,
+                -46.63206653567886
+              ],
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c033ffff",
+              "metros": 179.50439155101844,
+              "metros_exibicao": 179.5
+            },
+            {
+              "h3_cell": "89a8100c007ffff",
+              "metros": 359.005801776969,
+              "metros_exibicao": 359.01
+            },
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 179.50141018607192,
+              "metros_exibicao": 179.5
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 2.218861935388205,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 3.0902870155980113,
+            "km_total": 0.7180116035140593,
+            "km_com_dado": 0.7180116035140593,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 2.218862,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 3.090287,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 718.01,
+            "metros_com_dado": 718.01
+          }
+        },
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.52937804586215,
+                -46.62905519645476
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 169.78889496750406,
+              "metros_exibicao": 169.79
+            },
+            {
+              "h3_cell": "89a8100c00fffff",
+              "metros": 344.5715809634643,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c077ffff",
+              "metros": 339.57778993465445,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c067ffff",
+              "metros": 339.5777899346546,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c39bffff",
+              "metros": 344.57158096275714,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c38bffff",
+              "metros": 339.5777899353619,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c313ffff",
+              "metros": 339.57778993465456,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c303ffff",
+              "metros": 344.5715809627571,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c30fffff",
+              "metros": 339.57778993500835,
+              "metros_exibicao": 339.58
+            },
+            {
+              "h3_cell": "89a8100c377ffff",
+              "metros": 344.57158096311053,
+              "metros_exibicao": 344.57
+            },
+            {
+              "h3_cell": "89a8100c367ffff",
+              "metros": 89.88823851220803,
+              "metros_exibicao": 89.89
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 2.017491615445709,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.074468106383136,
+            "km_total": 3.335852407006135,
+            "km_com_dado": 1.8776654266983965,
+            "pct_sem_dado": 10.179640718559826,
+            "pct_fora_da_cobertura": 33.53293413172962,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 2.017492,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.074468,
+            "pct_sem_dado": 10.179641,
+            "pct_fora_da_cobertura": 33.532934,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 3335.85,
+            "metros_com_dado": 1877.67
+          }
+        }
+      ],
+      "ordenacao_posicoes": [
+        1,
+        2,
+        null
+      ]
+    },
+    {
+      "nome": "6_um_ponto",
+      "descricao": "um ponto só → rota_invalida",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ]
+            ],
+            "faixa": 2
+          },
+          "erro": "rota_invalida",
+          "detalhe": "menos de 2 pontos distintos"
+        }
+      ]
+    },
+    {
+      "nome": "7_pontos_repetidos",
+      "descricao": "pontos consecutivos repetidos são removidos",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55854074710156,
+                -46.63056086606681
+              ],
+              [
+                -23.55854074710156,
+                -46.63056086606681
+              ],
+              [
+                -23.55770344834097,
+                -46.63206653567886
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 179.50141018607195,
+              "metros_exibicao": 179.5
+            },
+            {
+              "h3_cell": "89a8100c007ffff",
+              "metros": 179.50224625638458,
+              "metros_exibicao": 179.5
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 0.6980637598530649,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.9444474932944176,
+            "km_total": 0.3590036564424565,
+            "km_com_dado": 0.3590036564424565,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 0.698064,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.944447,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 359.0,
+            "metros_com_dado": 359.0
+          }
+        }
+      ]
+    },
+    {
+      "nome": "8_segmento_menor_5m",
+      "descricao": "segmento de ~2 m (n=1)",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55936004586215,
+                -46.62905519645476
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 2.0015114443370106,
+              "metros_exibicao": 2.0
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 0.0008895597523669183,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 0.444444,
+            "km_total": 0.0020015114443370104,
+            "km_com_dado": 0.0020015114443370104,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 0.00089,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 0.444444,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 2.0,
+            "metros_com_dado": 2.0
+          }
+        }
+      ]
+    },
+    {
+      "nome": "9_volta_mesma_celula",
+      "descricao": "vai e volta: a célula de partida reaparece e soma metros",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55770344834097,
+                -46.63206653567886
+              ],
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 359.0028203721439,
+              "metros_exibicao": 359.0
+            },
+            {
+              "h3_cell": "89a8100c007ffff",
+              "metros": 359.0044925127691,
+              "metros_exibicao": 359.0
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 1.3961275197061296,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.9444474932944174,
+            "km_total": 0.718007312884913,
+            "km_com_dado": 0.718007312884913,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 1.396128,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 1.944447,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 718.01,
+            "metros_com_dado": 718.01
+          }
+        }
+      ]
+    },
+    {
+      "nome": "10_faixa_3h",
+      "descricao": "mesma rota do caso 4 na faixa noite_cedo (3 h)",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.55937804586215,
+                -46.62905519645476
+              ],
+              [
+                -23.55770344834097,
+                -46.63206653567886
+              ],
+              [
+                -23.55602877282228,
+                -46.635077834141946
+              ]
+            ],
+            "faixa": 3
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 179.50141018607195,
+              "metros_exibicao": 179.5
+            },
+            {
+              "h3_cell": "89a8100c007ffff",
+              "metros": 359.005801776969,
+              "metros_exibicao": 359.01
+            },
+            {
+              "h3_cell": "89a8100c033ffff",
+              "metros": 179.50439155101847,
+              "metros_exibicao": 179.5
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 1.9446194201984326,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 2.7083398244278585,
+            "km_total": 0.7180116035140593,
+            "km_com_dado": 0.7180116035140593,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 3,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 1.944619,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 2.70834,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 3,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 718.01,
+            "metros_com_dado": 718.01
+          }
+        }
+      ]
+    }
+  ],
+  "rotas_fronteira": [
+    {
+      "nome": "fronteira_1",
+      "descricao": "subsegmento único (~2 m) cujo ponto médio é um ponto de fronteira",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.560408447928808,
+                -46.627697837596855
+              ],
+              [
+                -23.560408447928808,
+                -46.62767783759685
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c003ffff",
+              "metros": 2.038515284183123,
+              "metros_exibicao": 2.04
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 0.000906005886963484,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 0.444444,
+            "km_total": 0.002038515284183123,
+            "km_com_dado": 0.002038515284183123,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 0.000906,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": 0.444444,
+            "pct_sem_dado": 0.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": false,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 2.04,
+            "metros_com_dado": 2.04
+          }
+        }
+      ]
+    },
+    {
+      "nome": "fronteira_2",
+      "descricao": "subsegmento único (~2 m) cujo ponto médio é um ponto de fronteira",
+      "rotas": [
+        {
+          "entrada": {
+            "pontos": [
+              [
+                -23.56040854792881,
+                -46.627697837596855
+              ],
+              [
+                -23.56040854792881,
+                -46.62767783759685
+              ]
+            ],
+            "faixa": 2
+          },
+          "celulas": [
+            {
+              "h3_cell": "89a8100c01bffff",
+              "metros": 2.03851528263165,
+              "metros_exibicao": 2.04
+            }
+          ],
+          "resultado": {
+            "pontuacao_acumulada_observada": 0.0,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": null,
+            "km_total": 0.00203851528263165,
+            "km_com_dado": 0.0,
+            "pct_sem_dado": 100.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada"
+          },
+          "resultado_exibicao": {
+            "pontuacao_acumulada_observada": 0.0,
+            "unidade": "pontos/(mês·hora) × km",
+            "indice_por_km": null,
+            "pct_sem_dado": 100.0,
+            "pct_fora_da_cobertura": 0.0,
+            "dado_insuficiente": true,
+            "faixa": 2,
+            "rotulo": "pontuação acumulada observada, abr–set/2026 (retrospectiva), demonstração não validada",
+            "metros_total": 2.04,
+            "metros_com_dado": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "pontos_interiores": [
+    {
+      "lat": -23.55924804586215,
+      "lon": -46.62914519645476,
+      "h3_cell": "89a8100c003ffff"
+    },
+    {
+      "lat": -23.554506975624452,
+      "lon": -46.63206613867567,
+      "h3_cell": "89a8100c03bffff"
+    },
+    {
+      "lat": -23.560356813700427,
+      "lon": -46.63835994343173,
+      "h3_cell": "89a8100c0a3ffff"
+    },
+    {
+      "lat": -23.55059087044483,
+      "lon": -46.650314194858424,
+      "h3_cell": "89a8100c113ffff"
+    },
+    {
+      "lat": -23.54809076937254,
+      "lon": -46.63799824367542,
+      "h3_cell": "89a8100c15bffff"
+    },
+    {
+      "lat": -23.547240601346758,
+      "lon": -46.65633628861122,
+      "h3_cell": "89a8100c1abffff"
+    },
+    {
+      "lat": -23.545306874155283,
+      "lon": -46.63179495284071,
+      "h3_cell": "89a8100c383ffff"
+    },
+    {
+      "lat": -23.58377534442433,
+      "lon": -46.629868293496834,
+      "h3_cell": "89a8100c413ffff"
+    },
+    {
+      "lat": -23.576252743155717,
+      "lon": -46.62658567689477,
+      "h3_cell": "89a8100c473ffff"
+    },
+    {
+      "lat": -23.58544948221724,
+      "lon": -46.626856803487776,
+      "h3_cell": "89a8100c4c7ffff"
+    },
+    {
+      "lat": -23.563963683407003,
+      "lon": -46.6598904219522,
+      "h3_cell": "89a8100c537ffff"
+    },
+    {
+      "lat": -23.564531137413294,
+      "lon": -46.647664961803166,
+      "h3_cell": "89a8100c573ffff"
+    },
+    {
+      "lat": -23.567029673649106,
+      "lon": -46.659980949606016,
+      "h3_cell": "89a8100c5afffff"
+    },
+    {
+      "lat": -23.541930429606296,
+      "lon": -46.67148138461881,
+      "h3_cell": "89a8100cc8bffff"
+    },
+    {
+      "lat": -23.582641872130896,
+      "lon": -46.65432075443348,
+      "h3_cell": "89a8100e32bffff"
+    },
+    {
+      "lat": -23.584316443592922,
+      "lon": -46.65130953589059,
+      "h3_cell": "89a8100e377ffff"
+    },
+    {
+      "lat": -23.55391225275898,
+      "lon": -46.677955970474656,
+      "h3_cell": "89a8100ea33ffff"
+    },
+    {
+      "lat": -23.552805710759372,
+      "lon": -46.66874224533424,
+      "h3_cell": "89a8100ea73ffff"
+    },
+    {
+      "lat": -23.562004451708813,
+      "lon": -46.66901394940717,
+      "h3_cell": "89a8100eac7ffff"
+    },
+    {
+      "lat": -23.572308199102153,
+      "lon": -46.67849964412537,
+      "h3_cell": "89a8100ee23ffff"
+    }
+  ],
+  "pontos_fronteira": [
+    {
+      "lat": -23.560408447928808,
+      "lon": -46.62768783759685,
+      "h3_cell": "89a8100c003ffff"
+    },
+    {
+      "lat": -23.56040854792881,
+      "lon": -46.62768783759685,
+      "h3_cell": "89a8100c01bffff"
+    },
+    {
+      "lat": -23.557834427190986,
+      "lon": -46.62923414982009,
+      "h3_cell": "89a8100c00fffff"
+    },
+    {
+      "lat": -23.557834527190987,
+      "lon": -46.62923414982009,
+      "h3_cell": "89a8100c003ffff"
+    },
+    {
+      "lat": -23.558733890163722,
+      "lon": -46.63069919662167,
+      "h3_cell": "89a8100c007ffff"
+    },
+    {
+      "lat": -23.558733990163724,
+      "lon": -46.63069919662167,
+      "h3_cell": "89a8100c003ffff"
+    },
+    {
+      "lat": -23.55615980186034,
+      "lon": -46.632245479682226,
+      "h3_cell": "89a8100c03bffff"
+    },
+    {
+      "lat": -23.55615990186034,
+      "lon": -46.632245479682226,
+      "h3_cell": "89a8100c007ffff"
+    },
+    {
+      "lat": -23.559016581969082,
+      "lon": -46.62458607454566,
+      "h3_cell": "89a8100c00bffff"
+    },
+    {
+      "lat": -23.559016681969084,
+      "lon": -46.62458607454566,
+      "h3_cell": "89a8100c057ffff"
+    },
+    {
+      "lat": -23.556442540882443,
+      "lon": -46.62613240910773,
+      "h3_cell": "89a8100c073ffff"
+    },
+    {
+      "lat": -23.556442640882445,
+      "lon": -46.62613240910773,
+      "h3_cell": "89a8100c00bffff"
+    },
+    {
+      "lat": -23.55734205453352,
+      "lon": -46.62759746055364,
+      "h3_cell": "89a8100c00fffff"
+    },
+    {
+      "lat": -23.557342154533522,
+      "lon": -46.62759746055364,
+      "h3_cell": "89a8100c00bffff"
+    },
+    {
+      "lat": -23.55476794587721,
+      "lon": -46.62914376596146,
+      "h3_cell": "89a8100c077ffff"
+    },
+    {
+      "lat": -23.55476804587721,
+      "lon": -46.62914376596146,
+      "h3_cell": "89a8100c00fffff"
+    },
+    {
+      "lat": -23.563474727408007,
+      "lon": -46.62777821550237,
+      "h3_cell": "89a8100c013ffff"
+    },
+    {
+      "lat": -23.563474827408008,
+      "lon": -46.62777821550237,
+      "h3_cell": "89a8100c0c7ffff"
+    },
+    {
+      "lat": -23.560900794598414,
+      "lon": -46.629324534541055,
+      "h3_cell": "89a8100c003ffff"
+    },
+    {
+      "lat": -23.560900894598415,
+      "lon": -46.629324534541055,
+      "h3_cell": "89a8100c013ffff"
+    }
+  ],
+  "empate_vetores": [
+    {
+      "a": 2.5,
+      "b": 2.50000000125,
+      "empate": true
+    },
+    {
+      "a": 2.5,
+      "b": 2.500000005,
+      "empate": false
+    }
+  ],
+  "contrato_snapshot_versao": 3
+}

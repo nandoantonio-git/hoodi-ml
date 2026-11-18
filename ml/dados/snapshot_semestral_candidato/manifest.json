@@ -1,0 +1,28 @@
+{
+  "status": "candidato; não substitui o v2 (SHA 2dddef70…) nem o v3 de 24 meses; sem aprovação para virar contrato",
+  "contrato_base": 2,
+  "janela_dados": [
+    "2026-04-01",
+    "2026-09-30"
+  ],
+  "n_meses": 6,
+  "formula_pontuacao": "pontuacao_mensal = soma dos pesos da chave na janela ÷ 6 meses ÷ horas da faixa",
+  "cortes_nivel": [
+    0.305556,
+    0.611111,
+    1.277778
+  ],
+  "cortes_regra": "quartis fixos de treino: janelas de 6 meses terminando entre jun/23 e dez/25 (passo de 3 meses), sem 2026",
+  "privacidade": {
+    "k_minimo": 3,
+    "n_chaves_suprimidas": 279,
+    "n_registros_suprimidos": 399
+  },
+  "n_chaves": 1395,
+  "n_com_dado": 824,
+  "n_sem_dado": 571,
+  "csv_sha256": "e33bd004ffcf0c47378ef0c9518bdf19a9ea84ca007222d798a2003a7c71c0da",
+  "gerado_em": "2026-11-18T04:31:46+00:00",
+  "natureza": "Mapa histórico observado (abr–set/2026); não é previsão.",
+  "aviso": "Melhor dado disponível no período. Não indica tempo real nem local seguro."
+}

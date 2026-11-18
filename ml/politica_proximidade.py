@@ -4,8 +4,10 @@ Demonstração retrospectiva exploratória (test_seen=true), não validada como 
 a referência; quem executa em produção é o app, no aparelho, sem rede. A regra NÃO garante distância nem antecedência
 mínima até a célula elegível: avisa quando a pessoa está numa célula elegível ou numa vizinha (grid_disk k=1).
 
-Uso: ~/.venvs/hoodi-ml311/bin/python -m ml.politica_proximidade   # grava docs/contratos-v3/politica_proximidade_v2.json
+Uso: ~/.venvs/hoodi-ml311/bin/python -m ml.politica_proximidade [2|3]
+     # grava docs/contratos-v3/politica_proximidade_v2.json (padrão) ou politica_proximidade_v3.json (snapshot v3 semestral)
 """
+import sys
 import datetime as dt
 import hashlib
 import json
@@ -21,14 +23,20 @@ from ml import config as C
 SNAPSHOT_CSV = C.SNAPSHOT / "risco_h3_faixa_v2.csv"
 DESTINO = C.RAIZ / "docs" / "contratos-v3"
 NOME = "politica_proximidade_v2.json"
+# Por versão do contrato do snapshot: onde ele está, como a política se chama e qual janela o texto cita.
+VERSOES = {
+    2: dict(pasta=C.SNAPSHOT, csv="risco_h3_faixa_v2.csv", nome=NOME, janela="jan–set/2026"),
+    3: dict(pasta=C.DADOS / "snapshot_v3", csv="risco_h3_faixa_v3.csv", nome="politica_proximidade_v3.json",
+            janela="abr–set/2026"),
+}
 FUSO = "America/Sao_Paulo"
 
 L_PADRAO = 3
 K_ANEL = 1
 COOLDOWN_MIN = 30
-TEXTO = "Área próxima com muitas ocorrências registradas (jan–set/2026)"
+TEXTO = "Área próxima com muitas ocorrências registradas ({janela})"
 TEXTO_SEM_DADO = "dados insuficientes para exibição"
-NATUREZA = ("Regra de produto exploratória sobre o mapa histórico observado (jan–set/2026). Demonstração retrospectiva, "
+NATUREZA = ("Regra de produto exploratória sobre o mapa histórico observado ({janela}). Demonstração retrospectiva, "
             "não validada como alerta para pessoas; test_seen=true. Alerta por proximidade: não garante distância nem "
             "antecedência mínima até a célula elegível.")
 
@@ -73,6 +81,7 @@ class Avaliador:
         self.ativa = politica["snapshot_csv_sha256"] == snapshot_sha256
         self.erro = None if self.ativa else "hash do snapshot não confere com a política; sem alerta"
         self.L, self.k, self.cooldown = politica["L"], politica["k_anel"], politica["cooldown_min"]
+        self.texto = politica["texto_alerta"]
         self.eleg = elegiveis(snap, self.L) if self.ativa else set()
         self.ultimo = {}
 
@@ -85,7 +94,7 @@ class Avaliador:
                  or instante - self.ultimo[c] >= dt.timedelta(minutes=self.cooldown)]
         for c in novas:
             self.ultimo[c] = instante
-        return dict(alerta=bool(novas), celulas=novas, faixa=faixa, texto=TEXTO if novas else None, erro=None)
+        return dict(alerta=bool(novas), celulas=novas, faixa=faixa, texto=self.texto if novas else None, erro=None)
 
 
 def tabela_por_nivel(snap: pd.DataFrame) -> list:
@@ -125,14 +134,15 @@ def cobertura_do_anel(snap: pd.DataFrame, L: int, k: int = K_ANEL) -> list:
     return out
 
 
-def montar(snap: pd.DataFrame, snapshot_sha256: str, L: int = L_PADRAO) -> dict:
+def montar(snap: pd.DataFrame, snapshot_sha256: str, L: int = L_PADRAO, contrato: int = 2) -> dict:
+    v = VERSOES[contrato]
     niveis = sorted(int(v) for v in snap.nivel.dropna().unique())
     if L not in niveis:
         raise ValueError(f"L={L} não existe no snapshot (níveis {niveis}); a política não alerta")
     return dict(
-        politica="proximidade", versao=1, natureza=NATUREZA, test_seen=True,
-        snapshot_csv="ml/dados/snapshot/risco_h3_faixa_v2.csv", snapshot_csv_sha256=snapshot_sha256,
-        contrato_snapshot_versao=2,
+        politica="proximidade", versao=1, natureza=NATUREZA.format(janela=v["janela"]), test_seen=True,
+        snapshot_csv=f"ml/dados/{v['pasta'].name}/{v['csv']}", snapshot_csv_sha256=snapshot_sha256,
+        contrato_snapshot_versao=contrato,
         L=L, k_anel=K_ANEL, cooldown_min=COOLDOWN_MIN, fuso=FUSO,
         faixas=[dict(faixa=f, faixa_nome=n, inicio_min=i, fim_min=fim) for f, n, i, fim in C.FAIXAS],
         regra=[
@@ -144,7 +154,7 @@ def montar(snap: pd.DataFrame, snapshot_sha256: str, L: int = L_PADRAO) -> dict:
             "Chave sem_dado nunca dispara e nunca é exibida como segura; na consulta mostra 'dados insuficientes para exibição'.",
             "Se snapshot_csv_sha256 não bater com o snapshot carregado, a política não alerta e registra o erro.",
         ],
-        texto_alerta=TEXTO, texto_sem_dado=TEXTO_SEM_DADO,
+        texto_alerta=TEXTO.format(janela=v["janela"]), texto_sem_dado=TEXTO_SEM_DADO,
         nao_afirma=["distância ou antecedência mínima", "segurança de qualquer área", "tempo real",
                     "orçamento de alertas em trajetos (fase 2)"],
         tabela_por_L=tabela_por_nivel(snap),
@@ -154,23 +164,27 @@ def montar(snap: pd.DataFrame, snapshot_sha256: str, L: int = L_PADRAO) -> dict:
     )
 
 
-def gravar(destino=DESTINO, L: int = L_PADRAO) -> dict:
+def gravar(destino=DESTINO, L: int = L_PADRAO, contrato: int = 2) -> dict:
+    v = VERSOES[contrato]
     destino = Path(destino)
     destino.mkdir(parents=True, exist_ok=True)
-    snap = ler_snapshot()
-    h_snap = sha256_arquivo(SNAPSHOT_CSV)
-    manifest = json.loads((C.SNAPSHOT / "manifest.json").read_text())
-    assert manifest["csv_sha256"] == h_snap, "snapshot diverge do manifest v2"
-    pol = montar(snap, h_snap, L)
-    arq = destino / NOME
+    csv = v["pasta"] / v["csv"]
+    snap = ler_snapshot(csv)
+    h_snap = sha256_arquivo(csv)
+    manifest = json.loads((v["pasta"] / "manifest.json").read_text())
+    assert manifest["csv_sha256"] == h_snap, f"snapshot diverge do manifest v{contrato}"
+    assert manifest["contrato_versao"] == contrato, "manifest de outra versão do contrato"
+    pol = montar(snap, h_snap, L, contrato)
+    nome = v["nome"]
+    arq = destino / nome
     arq.write_text(json.dumps(pol, ensure_ascii=False, indent=2) + "\n")
     h = sha256_arquivo(arq)
-    (destino / f"{NOME}.sha256").write_text(f"{h}  {NOME}\n")
+    (destino / f"{nome}.sha256").write_text(f"{h}  {nome}\n")
     return dict(arquivo=str(arq), sha256=h, politica=pol)
 
 
 if __name__ == "__main__":
-    r = gravar()
+    r = gravar(contrato=int(sys.argv[1]) if len(sys.argv) > 1 else 2)
     print(r["arquivo"], r["sha256"])
     for linha in r["politica"]["tabela_por_L"]:
         print(linha)

@@ -1,0 +1,24 @@
+{
+  "versao": "candidato-1",
+  "nota": "Pesos definidos à mão (rubrica de gravidade; sem rótulo de 'perigo para quem anda/dirige'). Regra: primeira que casar vale; campo = rubrica | natureza | conduta; prefixo em minúsculas.",
+  "perfis": {
+    "base": [
+      ["rubrica", "furto (art. 155)", 1], ["rubrica", "tráfico drogas", 1], ["rubrica", "drogas para consumo", 1],
+      ["rubrica", "lesão corporal culposa", 1], ["rubrica", "roubo (art. 157)", 3], ["rubrica", "lesão corporal (art. 129)", 3],
+      ["rubrica", "homicídio (art. 121)", 5], ["rubrica", "feminicídio", 5], ["rubrica", "estupro", 5]
+    ],
+    "pedestre": [
+      ["natureza", "latrocínio", 10], ["rubrica", "homicídio (art. 121)", 5], ["rubrica", "feminicídio", 5], ["rubrica", "estupro", 5],
+      ["natureza", "roubo de veículo", 2], ["rubrica", "roubo (art. 157)", 5], ["rubrica", "lesão corporal (art. 129)", 3],
+      ["natureza", "furto de veículo", 0.5], ["rubrica", "furto (art. 155)", 1], ["rubrica", "tráfico drogas", 1],
+      ["rubrica", "drogas para consumo", 1], ["rubrica", "lesão corporal culposa", 1]
+    ],
+    "carro": [
+      ["natureza", "latrocínio", 10], ["rubrica", "extorsão mediante", 5], ["natureza", "roubo de veículo", 5], ["natureza", "roubo de carga", 5],
+      ["rubrica", "homicídio (art. 121)", 5], ["rubrica", "feminicídio", 2], ["rubrica", "estupro", 2],
+      ["rubrica", "roubo (art. 157)", 3], ["natureza", "furto de veículo", 2], ["conduta", "interior de veículo", 2],
+      ["rubrica", "lesão corporal culposa na direção", 1], ["rubrica", "lesão corporal (art. 129)", 1],
+      ["rubrica", "furto (art. 155)", 0.5], ["rubrica", "tráfico drogas", 0.5], ["rubrica", "drogas para consumo", 0.5]
+    ]
+  }
+}

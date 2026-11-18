@@ -1,0 +1,27 @@
+AJUSTE R1 (a, λ) -> Spearman: {'(0, 0.25)': 0.883, '(2, 0)': 0.881, '(2, 0.25)': 0.878, '(0, 0)': 0.878, '(4, 0)': 0.875, '(4, 0.25)': 0.871} | escolhido 0 0.25
+
+=== R2 (22–33) ===
+-- EVIDÊNCIA (registros no contexto)
+  1–2   n=  97 | bin ctx 0.969 RF 0.969 XGB 0.969 | ≤1 ctx 0.969 RF 0.969 | exato ctx 0.753 RF 0.753 | Δbin RF [0.0, 0.0, 0.0]
+  3–5   n= 147 | bin ctx 0.966 RF 0.966 XGB 0.966 | ≤1 ctx 0.966 RF 0.973 | exato ctx 0.626 RF 0.639 | Δbin RF [0.0, 0.0, 0.0]
+  6–15  n= 412 | bin ctx 0.859 RF 0.874 XGB 0.879 | ≤1 ctx 0.954 RF 0.964 | exato ctx 0.534 RF 0.556 | Δbin RF [0.015, 0.0, 0.031]
+  16+   n=1530 | bin ctx 0.832 RF 0.837 XGB 0.827 | ≤1 ctx 0.975 RF 0.976 | exato ctx 0.657 RF 0.661 | Δbin RF [0.005, -0.007, 0.016]
+-- FAIXA HORÁRIA
+  0     n= 378 | bin ctx 0.881 RF 0.892 XGB 0.884 | ≤1 ctx 0.974 RF 0.987 | exato ctx 0.675 RF 0.683 | Δbin RF [0.011, -0.008, 0.032]
+  1     n= 460 | bin ctx 0.876 RF 0.865 XGB 0.848 | ≤1 ctx 0.989 RF 0.991 | exato ctx 0.667 RF 0.67 | Δbin RF [-0.011, -0.026, 0.008]
+  2     n= 477 | bin ctx 0.855 RF 0.881 XGB 0.876 | ≤1 ctx 0.981 RF 0.979 | exato ctx 0.66 RF 0.683 | Δbin RF [0.025, 0.004, 0.051]
+  3     n= 452 | bin ctx 0.832 RF 0.834 XGB 0.83 | ≤1 ctx 0.94 RF 0.942 | exato ctx 0.613 RF 0.613 | Δbin RF [0.002, -0.022, 0.026]
+  4     n= 419 | bin ctx 0.819 RF 0.821 XGB 0.828 | ≤1 ctx 0.964 RF 0.969 | exato ctx 0.563 RF 0.57 | Δbin RF [0.002, -0.021, 0.033]
+
+=== R3 (34–45) ===
+-- EVIDÊNCIA (registros no contexto)
+  1–2   n=  56 | bin ctx 1.0 RF 1.0 XGB 1.0 | ≤1 ctx 1.0 RF 1.0 | exato ctx 0.875 RF 0.857 | Δbin RF [0.0, 0.0, 0.0]
+  3–5   n= 111 | bin ctx 0.973 RF 0.973 XGB 0.973 | ≤1 ctx 0.973 RF 0.973 | exato ctx 0.784 RF 0.775 | Δbin RF [0.0, 0.0, 0.0]
+  6–15  n= 316 | bin ctx 0.892 RF 0.892 XGB 0.892 | ≤1 ctx 0.956 RF 0.965 | exato ctx 0.579 RF 0.576 | Δbin RF [0.0, 0.0, 0.0]
+  16+   n=1733 | bin ctx 0.834 RF 0.844 XGB 0.837 | ≤1 ctx 0.973 RF 0.973 | exato ctx 0.624 RF 0.646 | Δbin RF [0.01, -0.001, 0.02]
+-- FAIXA HORÁRIA
+  0     n= 377 | bin ctx 0.894 RF 0.883 XGB 0.883 | ≤1 ctx 0.984 RF 0.971 | exato ctx 0.666 RF 0.671 | Δbin RF [-0.011, -0.026, 0.004]
+  1     n= 472 | bin ctx 0.877 RF 0.886 XGB 0.881 | ≤1 ctx 0.989 RF 0.985 | exato ctx 0.676 RF 0.686 | Δbin RF [0.008, -0.006, 0.025]
+  2     n= 486 | bin ctx 0.856 RF 0.866 XGB 0.872 | ≤1 ctx 0.988 RF 0.986 | exato ctx 0.638 RF 0.667 | Δbin RF [0.01, -0.005, 0.029]
+  3     n= 463 | bin ctx 0.862 RF 0.877 XGB 0.849 | ≤1 ctx 0.963 RF 0.972 | exato ctx 0.618 RF 0.654 | Δbin RF [0.015, -0.003, 0.035]
+  4     n= 418 | bin ctx 0.778 RF 0.789 XGB 0.789 | ≤1 ctx 0.931 RF 0.945 | exato ctx 0.56 RF 0.553 | Δbin RF [0.012, -0.007, 0.033]

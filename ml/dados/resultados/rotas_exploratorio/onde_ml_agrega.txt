@@ -1,0 +1,186 @@
+pares: 600
+{
+ "A_memoria": {
+  "hist": {
+   "treino": {
+    "conc": 0.7498,
+    "reducao": 0.1013,
+    "km_extra": 0.0868
+   },
+   "teste": {
+    "conc": 0.7522,
+    "reducao": 0.1099,
+    "km_extra": 0.0844
+   }
+  },
+  "ewma_h6": {
+   "treino": {
+    "conc": 0.7534,
+    "reducao": 0.1029,
+    "km_extra": 0.0842
+   },
+   "teste": {
+    "conc": 0.756,
+    "reducao": 0.1168,
+    "km_extra": 0.086
+   }
+  },
+  "ewma_h12": {
+   "treino": {
+    "conc": 0.7537,
+    "reducao": 0.1042,
+    "km_extra": 0.085
+   },
+   "teste": {
+    "conc": 0.7576,
+    "reducao": 0.1163,
+    "km_extra": 0.084
+   }
+  },
+  "ewma_h24": {
+   "treino": {
+    "conc": 0.7524,
+    "reducao": 0.1033,
+    "km_extra": 0.0859
+   },
+   "teste": {
+    "conc": 0.7556,
+    "reducao": 0.1134,
+    "km_extra": 0.0839
+   }
+  },
+  "mix_hist_pers0.25": {
+   "treino": {
+    "conc": 0.7521,
+    "reducao": 0.1029,
+    "km_extra": 0.0855
+   },
+   "teste": {
+    "conc": 0.7565,
+    "reducao": 0.1151,
+    "km_extra": 0.0862
+   }
+  },
+  "mix_hist_pers0.5": {
+   "treino": {
+    "conc": 0.7438,
+    "reducao": 0.0987,
+    "km_extra": 0.087
+   },
+   "teste": {
+    "conc": 0.7492,
+    "reducao": 0.1115,
+    "km_extra": 0.0883
+   }
+  },
+  "recente12": {
+   "treino": {
+    "conc": 0.7467,
+    "reducao": 0.0978,
+    "km_extra": 0.0843
+   },
+   "teste": {
+    "conc": 0.7497,
+    "reducao": 0.1126,
+    "km_extra": 0.0858
+   }
+  }
+ },
+ "C_kmeans_pca": {
+  "k6_pc3_w0.25": {
+   "treino": {
+    "conc": 0.7527,
+    "reducao": 0.1036,
+    "km_extra": 0.0834
+   },
+   "teste": {
+    "conc": 0.7528,
+    "reducao": 0.1125,
+    "km_extra": 0.0831
+   }
+  },
+  "k6_pc3_w0.5": {
+   "treino": {
+    "conc": 0.7507,
+    "reducao": 0.102,
+    "km_extra": 0.0798
+   },
+   "teste": {
+    "conc": 0.7491,
+    "reducao": 0.1108,
+    "km_extra": 0.0814
+   }
+  },
+  "k10_pc3_w0.25": {
+   "treino": {
+    "conc": 0.7526,
+    "reducao": 0.1042,
+    "km_extra": 0.0834
+   },
+   "teste": {
+    "conc": 0.7542,
+    "reducao": 0.1131,
+    "km_extra": 0.0824
+   }
+  },
+  "k10_pc3_w0.5": {
+   "treino": {
+    "conc": 0.7504,
+    "reducao": 0.103,
+    "km_extra": 0.0801
+   },
+   "teste": {
+    "conc": 0.752,
+    "reducao": 0.1128,
+    "km_extra": 0.0793
+   }
+  },
+  "k16_pc4_w0.25": {
+   "treino": {
+    "conc": 0.7525,
+    "reducao": 0.1038,
+    "km_extra": 0.0842
+   },
+   "teste": {
+    "conc": 0.755,
+    "reducao": 0.1137,
+    "km_extra": 0.0828
+   }
+  },
+  "k16_pc4_w0.5": {
+   "treino": {
+    "conc": 0.7508,
+    "reducao": 0.1035,
+    "km_extra": 0.082
+   },
+   "teste": {
+    "conc": 0.7539,
+    "reducao": 0.1141,
+    "km_extra": 0.081
+   }
+  }
+ }
+}
+
+B) por faixa de ganho previsto sobre a mais curta (hist):
+                       n  melhor_que_curta  reducao_real  km_extra
+bin                                                               
+(-0.001, 0.0001]  7104.0             0.486         0.000     0.000
+(0.0001, 0.05]    6208.0             0.580         0.011     0.037
+(0.05, 0.15]      6398.0             0.616         0.067     0.082
+(0.15, 0.3]       6382.0             0.737         0.172     0.128
+(0.3, 1.0]        3746.0             0.807         0.345     0.243
+
+B) política: só desvia da mais curta se ganho previsto ≥ tau (treino = 5 primeiras, teste = 5 últimas)
+treino tau=0.00 desvia=100.00% reducao=10.129% km_extra=8.677% red/km=1.17 pior_que_curta=25.04%
+treino tau=0.05 desvia=56.00% reducao=9.908% km_extra=7.971% red/km=1.24 pior_que_curta=29.40%
+treino tau=0.10 desvia=44.57% reducao=9.436% km_extra=7.129% red/km=1.32 pior_que_curta=26.12%
+treino tau=0.15 desvia=34.25% reducao=8.431% km_extra=6.078% red/km=1.39 pior_que_curta=23.97%
+treino tau=0.20 desvia=25.69% reducao=7.180% km_extra=5.151% red/km=1.39 pior_que_curta=22.32%
+treino tau=0.30 desvia=13.21% reducao=4.477% km_extra=3.321% red/km=1.35 pior_que_curta=19.45%
+teste tau=0.00 desvia=100.00% reducao=10.986% km_extra=8.442% red/km=1.30 pior_que_curta=24.82%
+teste tau=0.05 desvia=54.77% reducao=10.740% km_extra=7.626% red/km=1.41 pior_que_curta=28.68%
+teste tau=0.10 desvia=43.60% reducao=10.173% km_extra=6.853% red/km=1.48 pior_que_curta=25.63%
+teste tau=0.15 desvia=33.63% reducao=9.291% km_extra=5.907% red/km=1.57 pior_que_curta=22.82%
+teste tau=0.20 desvia=24.31% reducao=7.840% km_extra=4.811% red/km=1.63 pior_que_curta=20.89%
+teste tau=0.30 desvia=11.90% reducao=4.945% km_extra=3.015% red/km=1.64 pior_que_curta=18.12%

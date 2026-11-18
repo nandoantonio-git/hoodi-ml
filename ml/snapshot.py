@@ -80,7 +80,62 @@ def _fixture(snap: pd.DataFrame) -> dict:
                 chaves=chaves)
 
 
+class SnapshotInvalido(ValueError):
+    """O snapshot viola o contrato (contracts/snapshot-risco.md)."""
+
+
+def validar(snap: pd.DataFrame) -> None:
+    """Confere o contrato semântico antes de publicar ou de aceitar um CSV. Levanta SnapshotInvalido."""
+    def falha(msg):
+        raise SnapshotInvalido(msg)
+
+    if list(snap.columns) != COLUNAS:
+        falha(f"colunas devem ser {COLUNAS}")
+    if len(snap) == 0:
+        falha("snapshot vazio")
+    if snap.duplicated(["h3_cell", "faixa"]).any():
+        falha("chave (h3_cell, faixa) duplicada")
+    if not set(snap.faixa.astype(int)) <= {f for f, *_ in C.FAIXAS}:
+        falha("faixa fora do contrato")
+    if not (snap.groupby("h3_cell").faixa.nunique() == len(C.FAIXAS)).all():
+        falha("toda célula precisa ter todas as faixas")
+    if not all(h3.is_valid_cell(c) for c in snap.h3_cell.unique()):
+        falha("h3_cell inválida")
+    if not snap.status.isin(["com_dado", "sem_dado"]).all():
+        falha("status deve ser com_dado ou sem_dado")
+    com, sem = snap[snap.status == "com_dado"], snap[snap.status == "sem_dado"]
+    if (com.n_registros < K_MINIMO).any():
+        falha(f"com_dado exige n_registros >= {K_MINIMO}")
+    if com.nivel.isna().any() or not com.nivel.isin([0, 1, 2, 3]).all():
+        falha("com_dado exige nivel 0..3")
+    if com.pontuacao_mensal.isna().any() or (com.pontuacao_mensal < 0).any():
+        falha("com_dado exige pontuacao_mensal >= 0")
+    if (sem.n_registros != 0).any() or sem.nivel.notna().any() or sem.pontuacao_mensal.notna().any():
+        falha("sem_dado exige n_registros 0 e nivel/pontuacao vazios (k-anonimato)")
+
+
+def validar_arquivos(destino) -> None:
+    """Confere CSV, .sha256 e manifest.json de um snapshot já gravado. Levanta SnapshotInvalido."""
+    destino = Path(destino)
+    csv = destino / f"{NOME}.csv"
+    h = hashlib.sha256(csv.read_bytes()).hexdigest()
+    esperado = (destino / f"{NOME}.csv.sha256").read_text().split()[0]
+    manifest = json.loads((destino / "manifest.json").read_text())
+    if h != esperado:
+        raise SnapshotInvalido("sha256 do CSV difere do arquivo .sha256")
+    if manifest.get("csv_sha256") != h:
+        raise SnapshotInvalido("csv_sha256 do manifest difere do CSV")
+    snap = pd.read_csv(csv, dtype={"h3_cell": str})
+    validar(snap)
+    if manifest.get("n_chaves") != len(snap) or manifest.get("n_com_dado") != int((snap.status == "com_dado").sum()):
+        raise SnapshotInvalido("contagens do manifest não batem com o CSV")
+    faixas = [f["faixa"] for f in manifest.get("faixas", [])]
+    if faixas != [f for f, *_ in C.FAIXAS]:
+        raise SnapshotInvalido("faixas do manifest não batem com o contrato")
+
+
 def gravar(snap: pd.DataFrame, destino, cortes, meta: dict) -> dict:
+    validar(snap)
     destino = Path(destino)
     destino.mkdir(parents=True, exist_ok=True)
     csv = destino / f"{NOME}.csv"

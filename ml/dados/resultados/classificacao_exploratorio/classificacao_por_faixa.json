@@ -1,0 +1,696 @@
+{
+ "R2 (22–33)": {
+  "evidencia": {
+   "1–2": {
+    "contexto (média histórica)": {
+     "n": 97,
+     "acc_bin": 0.969,
+     "ate1": 0.969,
+     "exato": 0.753,
+     "rho": 0.154
+    },
+    "RF classificador (E[nível])": {
+     "n": 97,
+     "acc_bin": 0.969,
+     "ate1": 0.969,
+     "exato": 0.753,
+     "rho": 0.34
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 97,
+     "acc_bin": 0.969,
+     "ate1": 0.969,
+     "exato": 0.753,
+     "rho": 0.409
+    },
+    "XGBoost regressor": {
+     "n": 97,
+     "acc_bin": 0.969,
+     "ate1": 0.969,
+     "exato": 0.742,
+     "rho": 0.375
+    }
+   },
+   "3–5": {
+    "contexto (média histórica)": {
+     "n": 147,
+     "acc_bin": 0.966,
+     "ate1": 0.966,
+     "exato": 0.626,
+     "rho": 0.507
+    },
+    "RF classificador (E[nível])": {
+     "n": 147,
+     "acc_bin": 0.966,
+     "ate1": 0.973,
+     "exato": 0.639,
+     "rho": 0.511
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 147,
+     "acc_bin": 0.966,
+     "ate1": 0.973,
+     "exato": 0.626,
+     "rho": 0.523
+    },
+    "XGBoost regressor": {
+     "n": 147,
+     "acc_bin": 0.966,
+     "ate1": 0.966,
+     "exato": 0.639,
+     "rho": 0.516
+    }
+   },
+   "6–15": {
+    "contexto (média histórica)": {
+     "n": 412,
+     "acc_bin": 0.859,
+     "ate1": 0.954,
+     "exato": 0.534,
+     "rho": 0.419
+    },
+    "RF classificador (E[nível])": {
+     "n": 412,
+     "acc_bin": 0.874,
+     "ate1": 0.964,
+     "exato": 0.556,
+     "rho": 0.428
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 412,
+     "acc_bin": 0.879,
+     "ate1": 0.964,
+     "exato": 0.519,
+     "rho": 0.428
+    },
+    "XGBoost regressor": {
+     "n": 412,
+     "acc_bin": 0.879,
+     "ate1": 0.959,
+     "exato": 0.529,
+     "rho": 0.437
+    }
+   },
+   "16+": {
+    "contexto (média histórica)": {
+     "n": 1530,
+     "acc_bin": 0.832,
+     "ate1": 0.975,
+     "exato": 0.657,
+     "rho": 0.847
+    },
+    "RF classificador (E[nível])": {
+     "n": 1530,
+     "acc_bin": 0.837,
+     "ate1": 0.976,
+     "exato": 0.661,
+     "rho": 0.852
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 1530,
+     "acc_bin": 0.827,
+     "ate1": 0.977,
+     "exato": 0.654,
+     "rho": 0.85
+    },
+    "XGBoost regressor": {
+     "n": 1530,
+     "acc_bin": 0.833,
+     "ate1": 0.976,
+     "exato": 0.661,
+     "rho": 0.849
+    }
+   }
+  },
+  "faixa_horaria": {
+   "0": {
+    "contexto (média histórica)": {
+     "n": 378,
+     "acc_bin": 0.881,
+     "ate1": 0.974,
+     "exato": 0.675,
+     "rho": 0.838
+    },
+    "RF classificador (E[nível])": {
+     "n": 378,
+     "acc_bin": 0.892,
+     "ate1": 0.987,
+     "exato": 0.683,
+     "rho": 0.843
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 378,
+     "acc_bin": 0.884,
+     "ate1": 0.981,
+     "exato": 0.661,
+     "rho": 0.843
+    },
+    "XGBoost regressor": {
+     "n": 378,
+     "acc_bin": 0.884,
+     "ate1": 0.984,
+     "exato": 0.651,
+     "rho": 0.84
+    }
+   },
+   "1": {
+    "contexto (média histórica)": {
+     "n": 460,
+     "acc_bin": 0.876,
+     "ate1": 0.989,
+     "exato": 0.667,
+     "rho": 0.875
+    },
+    "RF classificador (E[nível])": {
+     "n": 460,
+     "acc_bin": 0.865,
+     "ate1": 0.991,
+     "exato": 0.67,
+     "rho": 0.88
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 460,
+     "acc_bin": 0.848,
+     "ate1": 0.987,
+     "exato": 0.657,
+     "rho": 0.877
+    },
+    "XGBoost regressor": {
+     "n": 460,
+     "acc_bin": 0.863,
+     "ate1": 0.989,
+     "exato": 0.665,
+     "rho": 0.877
+    }
+   },
+   "2": {
+    "contexto (média histórica)": {
+     "n": 477,
+     "acc_bin": 0.855,
+     "ate1": 0.981,
+     "exato": 0.66,
+     "rho": 0.899
+    },
+    "RF classificador (E[nível])": {
+     "n": 477,
+     "acc_bin": 0.881,
+     "ate1": 0.979,
+     "exato": 0.683,
+     "rho": 0.895
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 477,
+     "acc_bin": 0.876,
+     "ate1": 0.983,
+     "exato": 0.683,
+     "rho": 0.897
+    },
+    "XGBoost regressor": {
+     "n": 477,
+     "acc_bin": 0.87,
+     "ate1": 0.981,
+     "exato": 0.683,
+     "rho": 0.893
+    }
+   },
+   "3": {
+    "contexto (média histórica)": {
+     "n": 452,
+     "acc_bin": 0.832,
+     "ate1": 0.94,
+     "exato": 0.613,
+     "rho": 0.846
+    },
+    "RF classificador (E[nível])": {
+     "n": 452,
+     "acc_bin": 0.834,
+     "ate1": 0.942,
+     "exato": 0.613,
+     "rho": 0.844
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 452,
+     "acc_bin": 0.83,
+     "ate1": 0.949,
+     "exato": 0.582,
+     "rho": 0.84
+    },
+    "XGBoost regressor": {
+     "n": 452,
+     "acc_bin": 0.838,
+     "ate1": 0.942,
+     "exato": 0.608,
+     "rho": 0.845
+    }
+   },
+   "4": {
+    "contexto (média histórica)": {
+     "n": 419,
+     "acc_bin": 0.819,
+     "ate1": 0.964,
+     "exato": 0.563,
+     "rho": 0.826
+    },
+    "RF classificador (E[nível])": {
+     "n": 419,
+     "acc_bin": 0.821,
+     "ate1": 0.969,
+     "exato": 0.57,
+     "rho": 0.823
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 419,
+     "acc_bin": 0.828,
+     "ate1": 0.969,
+     "exato": 0.568,
+     "rho": 0.821
+    },
+    "XGBoost regressor": {
+     "n": 419,
+     "acc_bin": 0.828,
+     "ate1": 0.964,
+     "exato": 0.578,
+     "rho": 0.827
+    }
+   }
+  },
+  "d_acc_bin_RF_evid": {
+   "1–2": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "3–5": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "6–15": [
+    0.015,
+    0.0,
+    0.031
+   ],
+   "16+": [
+    0.005,
+    -0.007,
+    0.016
+   ]
+  },
+  "d_acc_bin_XGB_evid": {
+   "1–2": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "3–5": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "6–15": [
+    0.019,
+    0.005,
+    0.039
+   ],
+   "16+": [
+    -0.005,
+    -0.02,
+    0.009
+   ]
+  },
+  "d_acc_bin_RF_faixa": {
+   "0": [
+    0.011,
+    -0.008,
+    0.032
+   ],
+   "1": [
+    -0.011,
+    -0.026,
+    0.008
+   ],
+   "2": [
+    0.025,
+    0.004,
+    0.051
+   ],
+   "3": [
+    0.002,
+    -0.022,
+    0.026
+   ],
+   "4": [
+    0.002,
+    -0.021,
+    0.033
+   ]
+  }
+ },
+ "R3 (34–45)": {
+  "evidencia": {
+   "1–2": {
+    "contexto (média histórica)": {
+     "n": 56,
+     "acc_bin": 1.0,
+     "ate1": 1.0,
+     "exato": 0.875,
+     "rho": 0.052
+    },
+    "RF classificador (E[nível])": {
+     "n": 56,
+     "acc_bin": 1.0,
+     "ate1": 1.0,
+     "exato": 0.857,
+     "rho": 0.513
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 56,
+     "acc_bin": 1.0,
+     "ate1": 1.0,
+     "exato": 0.875,
+     "rho": 0.526
+    },
+    "XGBoost regressor": {
+     "n": 56,
+     "acc_bin": 1.0,
+     "ate1": 1.0,
+     "exato": 0.875,
+     "rho": 0.529
+    }
+   },
+   "3–5": {
+    "contexto (média histórica)": {
+     "n": 111,
+     "acc_bin": 0.973,
+     "ate1": 0.973,
+     "exato": 0.784,
+     "rho": 0.424
+    },
+    "RF classificador (E[nível])": {
+     "n": 111,
+     "acc_bin": 0.973,
+     "ate1": 0.973,
+     "exato": 0.775,
+     "rho": 0.569
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 111,
+     "acc_bin": 0.973,
+     "ate1": 0.973,
+     "exato": 0.757,
+     "rho": 0.564
+    },
+    "XGBoost regressor": {
+     "n": 111,
+     "acc_bin": 0.973,
+     "ate1": 0.973,
+     "exato": 0.784,
+     "rho": 0.556
+    }
+   },
+   "6–15": {
+    "contexto (média histórica)": {
+     "n": 316,
+     "acc_bin": 0.892,
+     "ate1": 0.956,
+     "exato": 0.579,
+     "rho": 0.414
+    },
+    "RF classificador (E[nível])": {
+     "n": 316,
+     "acc_bin": 0.892,
+     "ate1": 0.965,
+     "exato": 0.576,
+     "rho": 0.475
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 316,
+     "acc_bin": 0.892,
+     "ate1": 0.978,
+     "exato": 0.563,
+     "rho": 0.466
+    },
+    "XGBoost regressor": {
+     "n": 316,
+     "acc_bin": 0.889,
+     "ate1": 0.965,
+     "exato": 0.547,
+     "rho": 0.474
+    }
+   },
+   "16+": {
+    "contexto (média histórica)": {
+     "n": 1733,
+     "acc_bin": 0.834,
+     "ate1": 0.973,
+     "exato": 0.624,
+     "rho": 0.845
+    },
+    "RF classificador (E[nível])": {
+     "n": 1733,
+     "acc_bin": 0.844,
+     "ate1": 0.973,
+     "exato": 0.646,
+     "rho": 0.861
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 1733,
+     "acc_bin": 0.837,
+     "ate1": 0.974,
+     "exato": 0.631,
+     "rho": 0.86
+    },
+    "XGBoost regressor": {
+     "n": 1733,
+     "acc_bin": 0.845,
+     "ate1": 0.974,
+     "exato": 0.641,
+     "rho": 0.863
+    }
+   }
+  },
+  "faixa_horaria": {
+   "0": {
+    "contexto (média histórica)": {
+     "n": 377,
+     "acc_bin": 0.894,
+     "ate1": 0.984,
+     "exato": 0.666,
+     "rho": 0.833
+    },
+    "RF classificador (E[nível])": {
+     "n": 377,
+     "acc_bin": 0.883,
+     "ate1": 0.971,
+     "exato": 0.671,
+     "rho": 0.839
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 377,
+     "acc_bin": 0.883,
+     "ate1": 0.971,
+     "exato": 0.658,
+     "rho": 0.838
+    },
+    "XGBoost regressor": {
+     "n": 377,
+     "acc_bin": 0.883,
+     "ate1": 0.976,
+     "exato": 0.655,
+     "rho": 0.838
+    }
+   },
+   "1": {
+    "contexto (média histórica)": {
+     "n": 472,
+     "acc_bin": 0.877,
+     "ate1": 0.989,
+     "exato": 0.676,
+     "rho": 0.879
+    },
+    "RF classificador (E[nível])": {
+     "n": 472,
+     "acc_bin": 0.886,
+     "ate1": 0.985,
+     "exato": 0.686,
+     "rho": 0.889
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 472,
+     "acc_bin": 0.881,
+     "ate1": 0.989,
+     "exato": 0.682,
+     "rho": 0.887
+    },
+    "XGBoost regressor": {
+     "n": 472,
+     "acc_bin": 0.892,
+     "ate1": 0.989,
+     "exato": 0.686,
+     "rho": 0.891
+    }
+   },
+   "2": {
+    "contexto (média histórica)": {
+     "n": 486,
+     "acc_bin": 0.856,
+     "ate1": 0.988,
+     "exato": 0.638,
+     "rho": 0.899
+    },
+    "RF classificador (E[nível])": {
+     "n": 486,
+     "acc_bin": 0.866,
+     "ate1": 0.986,
+     "exato": 0.667,
+     "rho": 0.905
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 486,
+     "acc_bin": 0.872,
+     "ate1": 0.988,
+     "exato": 0.658,
+     "rho": 0.904
+    },
+    "XGBoost regressor": {
+     "n": 486,
+     "acc_bin": 0.872,
+     "ate1": 0.988,
+     "exato": 0.673,
+     "rho": 0.907
+    }
+   },
+   "3": {
+    "contexto (média histórica)": {
+     "n": 463,
+     "acc_bin": 0.862,
+     "ate1": 0.963,
+     "exato": 0.618,
+     "rho": 0.862
+    },
+    "RF classificador (E[nível])": {
+     "n": 463,
+     "acc_bin": 0.877,
+     "ate1": 0.972,
+     "exato": 0.654,
+     "rho": 0.875
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 463,
+     "acc_bin": 0.849,
+     "ate1": 0.972,
+     "exato": 0.626,
+     "rho": 0.878
+    },
+    "XGBoost regressor": {
+     "n": 463,
+     "acc_bin": 0.868,
+     "ate1": 0.968,
+     "exato": 0.637,
+     "rho": 0.876
+    }
+   },
+   "4": {
+    "contexto (média histórica)": {
+     "n": 418,
+     "acc_bin": 0.778,
+     "ate1": 0.931,
+     "exato": 0.56,
+     "rho": 0.786
+    },
+    "RF classificador (E[nível])": {
+     "n": 418,
+     "acc_bin": 0.789,
+     "ate1": 0.945,
+     "exato": 0.553,
+     "rho": 0.8
+    },
+    "XGBoost classificador (E[nível])": {
+     "n": 418,
+     "acc_bin": 0.789,
+     "ate1": 0.952,
+     "exato": 0.538,
+     "rho": 0.803
+    },
+    "XGBoost regressor": {
+     "n": 418,
+     "acc_bin": 0.789,
+     "ate1": 0.943,
+     "exato": 0.541,
+     "rho": 0.8
+    }
+   }
+  },
+  "d_acc_bin_RF_evid": {
+   "1–2": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "3–5": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "6–15": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "16+": [
+    0.01,
+    -0.001,
+    0.02
+   ]
+  },
+  "d_acc_bin_XGB_evid": {
+   "1–2": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "3–5": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "6–15": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "16+": [
+    0.003,
+    -0.01,
+    0.016
+   ]
+  },
+  "d_acc_bin_RF_faixa": {
+   "0": [
+    -0.011,
+    -0.026,
+    0.004
+   ],
+   "1": [
+    0.008,
+    -0.006,
+    0.025
+   ],
+   "2": [
+    0.01,
+    -0.005,
+    0.029
+   ],
+   "3": [
+    0.015,
+    -0.003,
+    0.035
+   ],
+   "4": [
+    0.012,
+    -0.007,
+    0.033
+   ]
+  }
+ }
+}

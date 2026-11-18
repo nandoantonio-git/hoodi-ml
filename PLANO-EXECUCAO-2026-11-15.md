@@ -43,5 +43,5 @@ mas ago–set já foi visto em 15/11. Pela spec (T026), LSTM e KMeans+PCA entram
 - Checklist A1–A6 contra os arquivos reais.
 
 ## Depois do ML (fora deste plano, na sequência)
-- Wokwi: receber o nível de risco por Serial a partir da `fixture_v1.json`, rodar no Wokwi, vídeo e `.txt`.
-- Repositório no GitHub e vídeo de ML: só com confirmação do Nando.
+- Wokwi: receber o nível de risco por Serial a partir da `fixture_v1.json`, rodar no Wokwi e gerar o `.txt`.
+- Repositório no GitHub: só com confirmação do Nando.

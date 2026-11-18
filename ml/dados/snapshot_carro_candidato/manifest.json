@@ -1,0 +1,25 @@
+{
+  "status": "candidato exploratório; não substitui v2/v3",
+  "perfil": "carro",
+  "raio_km": 10.0,
+  "bbox": {
+    "lat_min": -23.65469009009009,
+    "lat_max": -23.47450990990991,
+    "lon_min": -46.750358738385366,
+    "lon_max": -46.554041261614636
+  },
+  "janela": [
+    "2024-10-01",
+    "2026-09-30"
+  ],
+  "cortes_nivel": [
+    0.09375,
+    0.180556,
+    0.340278
+  ],
+  "perfis_pesos": "ml/pesos_perfis.json",
+  "k_minimo": 3,
+  "n_chaves": 19545,
+  "n_com_dado": 15762,
+  "csv_sha256": "68b00eff9ff1505f6d52d540ada6b817dee2e9f99da377fea2110af01ca9f3ee"
+}

@@ -9,7 +9,11 @@ def main():
     u = pd.read_parquet(C.PROCESSED / "usadas.parquet")
     C.RESULTADOS.mkdir(parents=True, exist_ok=True)
     rubricas = rotulo.rubricas_sem_peso(u)
-    rubricas.to_csv(C.RESULTADOS / "rubricas_sem_peso.csv", index=False)
+    raras = rubricas.n_registros < 3  # k>=3 também aqui: rubricas raras saem agrupadas
+    publicavel = pd.concat([rubricas[~raras], pd.DataFrame(
+        {"rubrica": ["Outras rubricas (agrupadas, cada uma com menos de 3 registros)"],
+         "n_registros": [int(rubricas.loc[raras, "n_registros"].sum())]})]) if raras.any() else rubricas
+    publicavel.to_csv(C.RESULTADOS / "rubricas_sem_peso.csv", index=False)
     cortes = rotulo.cortes_treino(u)
     L = [f"Cortes de pontuação mensal (pontos/mês/hora), do treino T1–T4: {[round(c, 4) for c in cortes]}",
          "Regra: nível 0 < c1 ≤ nível 1 < c2 ≤ nível 2 < c3 ≤ nível 3", ""]

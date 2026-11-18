@@ -17,3 +17,4 @@ ml/dados/raw/*
 !ml/dados/raw/CHECKSUM.txt
 !ml/dados/raw/CHECKSUM_HISTORICO.txt
 !ml/dados/raw/PROVENIENCIA.md
+ml/dados/interim_carro/

@@ -1,0 +1,80 @@
+{
+  "contrato_versao": 3,
+  "fonte": {
+    "orgao": "SSP-SP",
+    "arquivo": "SPDadosCriminais_2026.xlsx",
+    "sha256": "f627d84ea8d95ae9301180d92e267610176b00d58a3eed5f7b1a8cd4e65acbaf"
+  },
+  "janela_dados": [
+    "2026-04-01",
+    "2026-09-30"
+  ],
+  "janela_nivel": "2026-04-01 a 2026-09-30; pontuacao_mensal = soma ÷ 6 meses ÷ horas da faixa",
+  "fuso": "America/Sao_Paulo",
+  "h3_resolucao": 9,
+  "faixas": [
+    {
+      "faixa": 0,
+      "faixa_nome": "madrugada",
+      "intervalo_horas": "[0,6)"
+    },
+    {
+      "faixa": 1,
+      "faixa_nome": "manha",
+      "intervalo_horas": "[6,12)"
+    },
+    {
+      "faixa": 2,
+      "faixa_nome": "tarde",
+      "intervalo_horas": "[12,18)"
+    },
+    {
+      "faixa": 3,
+      "faixa_nome": "noite_cedo",
+      "intervalo_horas": "[18,21)"
+    },
+    {
+      "faixa": 4,
+      "faixa_nome": "noite",
+      "intervalo_horas": "[21,24)"
+    }
+  ],
+  "perimetro": {
+    "lat_min": -23.58706,
+    "lat_max": -23.54214,
+    "lon_min": -46.67671,
+    "lon_max": -46.62769
+  },
+  "perimetro_centro": {
+    "lat": -23.5646,
+    "lon": -46.6522,
+    "provisorio": true
+  },
+  "perimetro_tamanho_km": [
+    5,
+    5
+  ],
+  "cortes_nivel": [
+    0.305556,
+    0.611111,
+    1.277778
+  ],
+  "formula_pontuacao": "pontuacao_mensal = (soma dos pesos dos registros da chave em abr–set) ÷ 6 meses ÷ horas da faixa (6,6,6,3,3). Pesos: furto, tráfico, drogas para consumo, lesão culposa no trânsito 1; roubo, lesão corporal 3; homicídio, feminicídio, estupro 5; demais rubricas sem peso.",
+  "nivel_regra": "0 abaixo do corte 1; 1 em [c1,c2); 2 em [c2,c3); 3 a partir de c3 (quartis do treino)",
+  "cortes_regra": "quartis fixos de treino: janelas de 6 meses terminando entre jun/23 e dez/25 (passo de 3 meses), sem 2026",
+  "privacidade": {
+    "regra": "k-anonimato por chave H3 × faixa: publicar como sem_dado quando n_registros < 3",
+    "k_minimo": 3,
+    "n_chaves_suprimidas": 279,
+    "n_registros_suprimidos": 399
+  },
+  "n_chaves": 1395,
+  "n_com_dado": 824,
+  "n_sem_dado": 571,
+  "total_linhas_base": 814900,
+  "total_registros_usados": 14132,
+  "csv_sha256": "e33bd004ffcf0c47378ef0c9518bdf19a9ea84ca007222d798a2003a7c71c0da",
+  "gerado_em": "2026-11-18T04:37:35+00:00",
+  "natureza": "Mapa histórico observado (abr–set 2026); não é previsão. O backtest do classificador é um experimento retrospectivo à parte.",
+  "aviso": "Melhor dado disponível no período. Não indica tempo real nem local seguro."
+}

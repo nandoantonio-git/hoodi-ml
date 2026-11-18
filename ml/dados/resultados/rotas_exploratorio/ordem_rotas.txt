@@ -1,0 +1,54 @@
+pares: 600
+REPORTADAS (10 origens)  {
+ "n_casos": 29838,
+ "concordancia_historica": 0.7509759129237075,
+ "concordancia_persistencia": 0.7092726578420009,
+ "concordancia_km_mais_curta": 0.649158464070951,
+ "rank_medio_escolhida_hist": 1.9810979288156043,
+ "rank_medio_mais_curta": 2.4838125879750654,
+ "rank_medio_persistencia": 2.187512567866479,
+ "rank_medio_acaso": 3.0,
+ "top1_hist": 0.4654132314498291,
+ "top1_km": 0.22313828004557945,
+ "reducao_exposicao_vs_mais_curta": 0.10572026963897085,
+ "ic95_reducao": [
+  0.09459343352313423,
+  0.11839172789561472
+ ],
+ "km_extra_pct": 0.08559471197976198
+}
+ago–set/2026 {
+ "n_casos": 2983,
+ "concordancia_historica": 0.7442500755464527,
+ "concordancia_persistencia": 0.7171103687957621,
+ "concordancia_km_mais_curta": 0.6491286975791559,
+ "rank_medio_escolhida_hist": 2.0181025812939994,
+ "rank_medio_mais_curta": 2.496144820650352,
+ "rank_medio_persistencia": 2.1599061347636606,
+ "rank_medio_acaso": 3.0,
+ "top1_hist": 0.45524639624539054,
+ "top1_km": 0.21890714046262152,
+ "reducao_exposicao_vs_mais_curta": 0.09696127856219572,
+ "ic95_reducao": [
+  0.07934286616917972,
+  0.11459023995763432
+ ],
+ "km_extra_pct": 0.08462662201508908
+}
+por faixa:
+0 0.728 0.161 0.096 5906
+1 0.765 0.102 0.082 5994
+2 0.773 0.095 0.073 5995
+3 0.764 0.107 0.083 5988
+4 0.724 0.09 0.094 5955
+por origem:
+jan–fev/2025 0.751 0.102
+mar–abr/2025 0.754 0.104
+mai–jun/2025 0.745 0.099
+jul–ago/2025 0.747 0.095
+set–out/2025 0.752 0.105
+nov–dez/2025 0.757 0.104
+jan–fev/2026 0.752 0.109
+mar–abr/2026 0.753 0.113
+mai–jun/2026 0.749 0.114
+jul–ago/2026 0.75 0.108

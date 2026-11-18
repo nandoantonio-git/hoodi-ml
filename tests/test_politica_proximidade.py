@@ -92,7 +92,7 @@ def test_vizinha_dispara_e_cooldown(pol, snap, h_snap):
     t0 = dt.datetime(2026, 11, 16, hora, 0, tzinfo=SP)
     av = P.Avaliador(pol, snap, h_snap)
     r1 = av.avaliar(viz, t0)
-    assert r1["alerta"] and alvo in r1["celulas"] and r1["texto"] == P.TEXTO
+    assert r1["alerta"] and alvo in r1["celulas"] and r1["texto"] == pol["texto_alerta"]
     assert not av.avaliar(viz, t0 + dt.timedelta(minutes=29))["alerta"] or \
         alvo not in av.avaliar(viz, t0 + dt.timedelta(minutes=29))["celulas"]
     r3 = av.avaliar(viz, t0 + dt.timedelta(minutes=30))

@@ -1,16 +1,15 @@
 # hoodi — módulo de Machine Learning (Global Solution CitizenTech, FIAP)
 
-> **Natureza do resultado:** mapa **histórico observado** de ocorrências registradas pela SSP-SP (jan–set/2026), por área (célula H3, resolução 9) e faixa horária. É o melhor dado disponível no período. **Não** indica risco em tempo real, **não** prevê o futuro e **não** aponta lugar seguro.
+> **Natureza do resultado:** mapa **histórico observado** de ocorrências registradas pela SSP-SP (contrato v3 vigente: abr–set/2026; v2, jan–set/2026, fica para rollback), por área (célula H3, resolução 9) e faixa horária. É o melhor dado disponível no período. **Não** indica risco em tempo real, **não** prevê o futuro e **não** aponta lugar seguro.
 
-O hoodi é um aplicativo para quem anda a pé em São Paulo: mostra no mapa o nível de ocorrências registradas por área e horário, avisa quando a pessoa se aproxima de uma área de nível alto e compara rotas. Este repositório contém **somente o módulo de ML**: ingestão do dado público, construção do mapa de níveis, avaliação honesta de modelos e os contratos que a API e o app consomem.
+O hoodi é um aplicativo de apoio à decisão para quem anda a pé por São Paulo: mostra no mapa o nível de ocorrências registradas por área e horário e avisa quando a pessoa entra em uma área de nível alto. A comparação de rotas de carro é a fase 2, depois da entrega. Este repositório contém **somente o módulo de ML**: ingestão do dado público, construção do mapa de níveis, avaliação honesta de modelos e os contratos que a API e o app consomem.
 
 ## Ficha CitizenTech
-<!-- Dados oficiais da ficha da equipe. Campos em branco serão preenchidos pelo autor; nada aqui foi inferido. -->
-- **Equipe e RMs:** _[a preencher]_
-- **Desafio / problema:** _[a preencher]_
-- **Público-alvo:** _[a preencher]_
-- **ODS relacionados:** _[a preencher — número e nome oficial]_
-- **Justificativa dos ODS:** _[a preencher]_
+- **Equipe e RMs:** Abner Barbosa (RM558468), Beatriz Vieira de Novais (RM554746), Fernando Antonio (RM555201) e Mariana Neugebauer (RM550494).
+- **Desafio / problema:** quem se desloca pela cidade decide trajetos e horários sem informação organizada sobre onde e quando houve ocorrências. O hoodi oferece apoio à decisão, com base em dado oficial (SSP-SP), para evitar vias e rotas de maior exposição histórica.
+- **Público-alvo:** pessoas ativas que andam a pé por São Paulo, em geral com trabalho presencial ou híbrido. O app avisa, de forma ambiente, quando a pessoa entra em área com ocorrências registradas. Rotas de carro ficam para a fase 2 e exigem avaliação própria do ML (o dado atual não distingue crime contra veículo; ver Limites).
+- **ODS relacionados:** ODS 11, Cidades e Comunidades Sustentáveis (principal, meta 11.2); ODS 16, Paz, Justiça e Instituições Eficazes (secundário).
+- **Justificativa dos ODS:** ODS 11: o hoodi apoia a decisão de deslocamento na cidade, com alerta ambiente a pé por exposição histórica a ocorrências, em linha com a meta de transporte mais seguro. ODS 11 é o principal. ODS 16 (secundário): usa só dado público oficial (SSP-SP), com método, limites e código abertos. É um indicador histórico observado, não garantia de segurança nem previsão.
 
 ## Sumário
 1. [Arquitetura e papel do ML](#arquitetura-e-papel-do-ml)
@@ -47,7 +46,9 @@ SSP-SP (XLSX público) ──► ml/ (lote, Python) ──► snapshot CSV + sha
 
 | Entregável | Onde |
 |---|---|
-| Snapshot de nível por célula H3 r9 × faixa horária (contrato v2, supressão k ≥ 3, SHA-256) | `ml/dados/snapshot/` |
+| **Snapshot v3 (vigente)**: semestral abr–set/2026, 5×5 km, k ≥ 3, SHA-256 `e33bd004…c71c0da` | `ml/dados/snapshot_v3/` |
+| Snapshot v2 (referência e rollback, jan–set/2026), SHA-256 `2dddef70…` | `ml/dados/snapshot/` |
+| Derivados v3: política de proximidade e vetores de rota | `docs/contratos-v3/politica_proximidade_v3.json`, `vetores_rota_v3.json` |
 | Fixture de 5 linhas para testes dos consumidores | `ml/dados/snapshot/fixture_v2.json` |
 | Política de alerta de proximidade (parâmetros e casos) | `docs/contratos-v3/politica_proximidade_v2.json` |
 | Vetores-ouro para validar a pontuação de rota na API | `docs/contratos-v3/vetores_rota_v2.json` + `rota_pontuacao_v1.md` |
@@ -61,13 +62,15 @@ SSP-SP (XLSX público) ──► ml/ (lote, Python) ──► snapshot CSV + sha
 
 - **Fonte:** SSP-SP, portal da Transparência, arquivo `SPDadosCriminais_2026.xlsx`. URL, tamanho e SHA-256 em `ml/dados/README.md`; o conversor aborta se o hash divergir.
 - **Janela:** 1º de janeiro a 30 de setembro de 2026, fuso America/Sao_Paulo.
-- **Volume:** 814.900 linhas no arquivo; 20.657 ocorrências com coordenada e hora dentro do perímetro de estudo.
+- **Volume:** 814.900 linhas no arquivo; 20.657 com coordenada e hora dentro do perímetro (todo o ano); **20.343 usadas na modelagem** (jan–set/2026, após remover 307 fora da janela e as duplicatas/conflitos de BO), 2,50 % da base e 58,5 % do que cai no perímetro.
 - **Reconciliação:** entrada = usadas + quarentena + duplicatas removidas + fora da janela, sem resto. Linhas sem hora, sem coordenada ou com BO conflitante vão para a quarentena com o motivo registrado (`ml/dados/reconciliacao*.txt`).
 - **Unidade de análise:** célula H3 resolução 9 (≈ 0,1 km²) × 5 faixas horárias: madrugada [0,6), manhã [6,12), tarde [12,18), noite cedo [18,21), noite [21,24).
 - **Rótulo:** `pontuacao_mensal` = soma dos pesos ÷ 9 meses ÷ horas da faixa; `nivel` 0–3 pelos três cortes de quartil calculados **só no treino**.
 - **O dado bruto não está no Git.** Apenas agregados por célula e faixa são versionados.
 
-## Contrato do snapshot (v2)
+> **Contrato vigente: v3** (`ml/dados/snapshot_v3/`). O texto abaixo descreve o formato, idêntico em v2 e v3; os números (1.395 chaves, 954/441) são do v2. No v3: 1.395 chaves, 824 `com_dado` e 571 `sem_dado`.
+
+## Contrato do snapshot (formato v2/v3)
 
 Arquivo: `ml/dados/snapshot/risco_h3_faixa_v2.csv` · SHA-256: `2dddef701bdecb65142874980f1ae5aba7b2ac6ab2abad5c47b07f07ecc5080a` · `contrato_versao = 2`.
 
@@ -132,7 +135,7 @@ pytest -q                                    # suíte completa (100 testes)
 
 O snapshot regenerado tem o mesmo SHA-256 do versionado; só o campo `gerado_em` do manifesto muda. O conversor cria `ml/dados/interim/` e instala/carrega a extensão `excel` do DuckDB (a primeira execução precisa de rede para baixá-la).
 
-Para regenerar o notebook executado: `python scripts/gerar_notebook.py` e depois `jupyter nbconvert --execute --to notebook --inplace notebooks/hoodi_ml_documentado.ipynb`.
+O notebook `notebooks/hoodi_ml_documentado.ipynb` é a fonte única e é editado diretamente. Para reexecutá-lo, rode `jupyter nbconvert --execute --to notebook --inplace notebooks/hoodi_ml_documentado.ipynb` dentro de `notebooks/` (caminhos relativos). `scripts/gerar_notebook.py` está aposentado e não deve ser executado: ele sobrescreveria o notebook com uma versão antiga.
 
 ## Testes
 

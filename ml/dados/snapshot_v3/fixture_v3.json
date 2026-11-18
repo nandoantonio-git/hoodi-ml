@@ -1,0 +1,51 @@
+{
+  "contrato_versao": 3,
+  "descricao": "Amostra real com níveis 0–3 e sem_dado para testes do app; não é o snapshot completo.",
+  "chaves": [
+    {
+      "h3_cell": "89a8100c003ffff",
+      "faixa": 0,
+      "faixa_nome": "madrugada",
+      "status": "sem_dado",
+      "nivel": null,
+      "pontuacao_mensal": null,
+      "n_registros": 0
+    },
+    {
+      "h3_cell": "89a8100c033ffff",
+      "faixa": 2,
+      "faixa_nome": "tarde",
+      "status": "com_dado",
+      "nivel": 3,
+      "pontuacao_mensal": 5.027778,
+      "n_registros": 145
+    },
+    {
+      "h3_cell": "89a8100c137ffff",
+      "faixa": 2,
+      "faixa_nome": "tarde",
+      "status": "com_dado",
+      "nivel": 1,
+      "pontuacao_mensal": 0.527778,
+      "n_registros": 19
+    },
+    {
+      "h3_cell": "89a8100ea1bffff",
+      "faixa": 2,
+      "faixa_nome": "tarde",
+      "status": "com_dado",
+      "nivel": 2,
+      "pontuacao_mensal": 1.25,
+      "n_registros": 35
+    },
+    {
+      "h3_cell": "89a8100ead7ffff",
+      "faixa": 1,
+      "faixa_nome": "manha",
+      "status": "com_dado",
+      "nivel": 0,
+      "pontuacao_mensal": 0.277778,
+      "n_registros": 10
+    }
+  ]
+}

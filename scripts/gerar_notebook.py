@@ -1,4 +1,12 @@
-"""Gera notebooks/hoodi_ml_documentado.ipynb a partir dos resultados versionados (sem retreinar nada).
+"""APOSENTADO: não execute este script.
+
+Ele grava direto em notebooks/hoodi_ml_documentado.ipynb e geraria 60 células, contra as 64 do notebook
+versionado. Faltariam o cabeçalho e o índice atuais, a seção 6 (MLflow, cinco experimentos), as seções 12 e 13
+e a célula de retreino, e as edições manuais seriam apagadas. O .ipynb é a fonte única; edite-o diretamente.
+Mantido só como registro histórico de como a primeira versão foi montada.
+
+Texto original:
+Gera notebooks/hoodi_ml_documentado.ipynb a partir dos resultados versionados (sem retreinar nada).
 Uso: ~/.venvs/hoodi-ml311/bin/python scripts/gerar_notebook.py
      ~/.venvs/hoodi-ml311/bin/jupyter nbconvert --to notebook --execute --inplace notebooks/hoodi_ml_documentado.ipynb"""
 from pathlib import Path

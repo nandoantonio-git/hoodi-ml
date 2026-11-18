@@ -14,6 +14,7 @@
 | 1. Ingestão, janela, perímetro, deduplicação | `ml/ingestao.py` | `processed/usadas.parquet`, `quarantine/` | não |
 | 2. Snapshot do app | `ml/gerar_snapshot.py` | `snapshot/` (CSV v2, `.sha256`, `manifest.json`, `fixture_v2.json`) | **sim** |
 | 3. Modelos e avaliações | `ml/modelos.py`, `ml/incerteza_custo.py`, `ml/calibracao.py`… | `resultados/` | **sim** (métricas agregadas; backtest sem H3, faixa, rótulo ou contagem por chave) |
+| 4. Exploratórios (anexo) | `ml/exploratorio_classificacao/*.py`, `ml/exploratorio_rotas/` | `resultados/classificacao_exploratorio/`, `resultados/rotas_exploratorio/` | **sim** (agregados). Reproduzidos em 17/11/2026: os 3 scripts de classificação por faixa dão saída idêntica à guardada |
 
 Reconciliação da base 2026 (`reconciliacao.txt`): 814.900 linhas = 20.343 usadas + 384.867 quarentena + 2.390 duplicatas removidas + 407.300 fora da janela ou do perímetro. **Dado utilizável: 2,50 % da base; 58,5 % do que cai no perímetro.** A maior perda dentro do perímetro é `sem_hora` (14.113 registros), que não pode ser atribuído a uma faixa horária.
 

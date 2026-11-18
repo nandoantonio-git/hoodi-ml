@@ -1,0 +1,61 @@
+pares: 600
+jan–fev/2025
+mar–abr/2025
+mai–jun/2025
+jul–ago/2025
+set–out/2025
+nov–dez/2025
+jan–fev/2026
+mar–abr/2026
+mai–jun/2026
+jul–ago/2026
+{
+ "historica": {
+  "concordancia": 0.7509759129237075,
+  "rank_medio": 1.9810979288156043,
+  "top1": 0.4654132314498291,
+  "exposicao_total": 32330.44704944751,
+  "concordancia_L_x_L": 0.7619973842181159,
+  "reducao_vs_mais_curta": 0.10572026963897607
+ },
+ "persistencia": {
+  "concordancia": 0.7092726578420009,
+  "rank_medio": 2.187512567866479,
+  "top1": 0.41055030498022654,
+  "exposicao_total": 33334.77822157613,
+  "concordancia_L_x_L": 0.7161579408395661,
+  "reducao_vs_mais_curta": 0.07793986164057498
+ },
+ "suavizada50": {
+  "concordancia": 0.741109282090906,
+  "rank_medio": 2.033949996648569,
+  "top1": 0.43323949326362354,
+  "exposicao_total": 32613.955860203005,
+  "concordancia_L_x_L": 0.7557262148294711,
+  "reducao_vs_mais_curta": 0.09787824436633974
+ },
+ "rf": {
+  "concordancia": 0.735005207108543,
+  "rank_medio": 2.0264427910717875,
+  "top1": 0.41282927810174946,
+  "exposicao_total": 32784.6217820246,
+  "concordancia_L_x_L": 0.7608571716019987,
+  "reducao_vs_mais_curta": 0.09315752168919866
+ },
+ "mistura_hist_rf": {
+  "concordancia": 0.7505929384889307,
+  "rank_medio": 1.9714458073597425,
+  "top1": 0.4503317916750452,
+  "exposicao_total": 32269.794801257667,
+  "concordancia_L_x_L": 0.7650826654146685,
+  "reducao_vs_mais_curta": 0.10739794752799647
+ },
+ "mais_curta": {
+  "concordancia": 0.649158464070951,
+  "rank_medio": 2.4838125879750654,
+  "top1": 0.22313828004557945,
+  "exposicao_total": 36152.49899088688,
+  "concordancia_L_x_L": null,
+  "reducao_vs_mais_curta": 0.0
+ }
+}

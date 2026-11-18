@@ -1,0 +1,658 @@
+{
+ "R2 (22–33)": {
+  "n": 2186,
+  "n_celulas": 260,
+  "metricas": {
+   "so_A (bruto)": {
+    "macroF1": 0.6027732475163047,
+    "exato": 0.6010978956999085,
+    "ate1": 0.9519670631290027,
+    "spearman": 0.8263457678886659,
+    "auc_metade_alta": 0.9127078225687606,
+    "acc_binaria": 0.8380603842634949,
+    "dMacroF1_vs_contexto": [
+     -0.034,
+     -0.062,
+     -0.005
+    ],
+    "dSpearman_vs_contexto": [
+     -0.04,
+     -0.055,
+     -0.029
+    ]
+   },
+   "contexto (média histórica)": {
+    "macroF1": 0.6370660951734411,
+    "exato": 0.6358645928636779,
+    "ate1": 0.969807868252516,
+    "spearman": 0.8658140455588497,
+    "auc_metade_alta": 0.9310949285264525,
+    "acc_binaria": 0.8522415370539799,
+    "dMacroF1_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dSpearman_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "suavizada λ=.25": {
+    "macroF1": 0.6293395204615688,
+    "exato": 0.6280878316559927,
+    "ate1": 0.9684354986276303,
+    "spearman": 0.8595426018238251,
+    "auc_metade_alta": 0.9266650925070001,
+    "acc_binaria": 0.8490393412625801,
+    "dMacroF1_vs_contexto": [
+     -0.007,
+     -0.021,
+     0.005
+    ],
+    "dSpearman_vs_contexto": [
+     -0.006,
+     -0.012,
+     -0.002
+    ]
+   },
+   "empírico-Bayes a=0": {
+    "macroF1": 0.6370660951734411,
+    "exato": 0.6358645928636779,
+    "ate1": 0.969807868252516,
+    "spearman": 0.8658140455588497,
+    "auc_metade_alta": 0.9310949285264525,
+    "acc_binaria": 0.8522415370539799,
+    "dMacroF1_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dSpearman_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "EB+espacial a=0 λ=0.25": {
+    "macroF1": 0.6293395204615688,
+    "exato": 0.6280878316559927,
+    "ate1": 0.9684354986276303,
+    "spearman": 0.8595363692560128,
+    "auc_metade_alta": 0.9266596499336843,
+    "acc_binaria": 0.8490393412625801,
+    "dMacroF1_vs_contexto": [
+     -0.007,
+     -0.021,
+     0.005
+    ],
+    "dSpearman_vs_contexto": [
+     -0.006,
+     -0.012,
+     -0.002
+    ]
+   },
+   "XGBoost regressor": {
+    "macroF1": 0.639302668769511,
+    "exato": 0.6381518755718206,
+    "ate1": 0.9720951509606587,
+    "spearman": 0.8681528782248703,
+    "auc_metade_alta": 0.9296677183392951,
+    "acc_binaria": 0.8563586459286368,
+    "dMacroF1_vs_contexto": [
+     0.002,
+     -0.014,
+     0.018
+    ],
+    "dSpearman_vs_contexto": [
+     0.002,
+     -0.002,
+     0.007
+    ]
+   },
+   "XGBoost classificador (E[nível])": {
+    "macroF1": 0.632099088277915,
+    "exato": 0.630832570905764,
+    "ate1": 0.973924977127173,
+    "spearman": 0.8695266534640087,
+    "auc_metade_alta": 0.9310275243492357,
+    "acc_binaria": 0.8526989935956084,
+    "dMacroF1_vs_contexto": [
+     -0.005,
+     -0.02,
+     0.011
+    ],
+    "dSpearman_vs_contexto": [
+     0.004,
+     -0.001,
+     0.008
+    ]
+   },
+   "RF classificador (E[nível])": {
+    "macroF1": 0.6453384750944258,
+    "exato": 0.6440988106129918,
+    "ate1": 0.9734675205855444,
+    "spearman": 0.8705816033662156,
+    "auc_metade_alta": 0.9320624505981808,
+    "acc_binaria": 0.8581884720951509,
+    "dMacroF1_vs_contexto": [
+     0.008,
+     -0.004,
+     0.021
+    ],
+    "dSpearman_vs_contexto": [
+     0.005,
+     0.001,
+     0.009
+    ]
+   }
+  },
+  "seletiva": {
+   "contexto (média histórica)": {
+    "cob100": {
+     "n": 2186,
+     "macroF1": 0.637,
+     "ate1": 0.97,
+     "acc_binaria": 0.852
+    },
+    "cob75": {
+     "n": 1650,
+     "macroF1": 0.576,
+     "ate1": 0.97,
+     "acc_binaria": 0.827
+    },
+    "cob50": {
+     "n": 1109,
+     "macroF1": 0.48,
+     "ate1": 0.981,
+     "acc_binaria": 0.858
+    },
+    "cob25": {
+     "n": 556,
+     "macroF1": 0.364,
+     "ate1": 0.993,
+     "acc_binaria": 0.975
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2186,
+      "acc_binaria": 0.852
+     },
+     "cob75": {
+      "n": 1644,
+      "acc_binaria": 0.929
+     },
+     "cob50": {
+      "n": 1095,
+      "acc_binaria": 0.968
+     },
+     "cob25": {
+      "n": 552,
+      "acc_binaria": 0.987
+     }
+    }
+   },
+   "EB+espacial a=0 λ=0.25": {
+    "cob100": {
+     "n": 2186,
+     "macroF1": 0.629,
+     "ate1": 0.968,
+     "acc_binaria": 0.849
+    },
+    "cob75": {
+     "n": 1650,
+     "macroF1": 0.573,
+     "ate1": 0.968,
+     "acc_binaria": 0.822
+    },
+    "cob50": {
+     "n": 1109,
+     "macroF1": 0.478,
+     "ate1": 0.981,
+     "acc_binaria": 0.857
+    },
+    "cob25": {
+     "n": 556,
+     "macroF1": 0.371,
+     "ate1": 0.995,
+     "acc_binaria": 0.975
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2186,
+      "acc_binaria": 0.849
+     },
+     "cob75": {
+      "n": 1639,
+      "acc_binaria": 0.92
+     },
+     "cob50": {
+      "n": 1093,
+      "acc_binaria": 0.965
+     },
+     "cob25": {
+      "n": 548,
+      "acc_binaria": 0.987
+     }
+    }
+   },
+   "XGBoost classificador (E[nível])": {
+    "cob100": {
+     "n": 2186,
+     "macroF1": 0.632,
+     "ate1": 0.974,
+     "acc_binaria": 0.853
+    },
+    "cob75": {
+     "n": 1639,
+     "macroF1": 0.662,
+     "ate1": 0.977,
+     "acc_binaria": 0.876
+    },
+    "cob50": {
+     "n": 1093,
+     "macroF1": 0.69,
+     "ate1": 0.984,
+     "acc_binaria": 0.93
+    },
+    "cob25": {
+     "n": 547,
+     "macroF1": 0.562,
+     "ate1": 0.996,
+     "acc_binaria": 0.995
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2186,
+      "acc_binaria": 0.853
+     },
+     "cob75": {
+      "n": 1639,
+      "acc_binaria": 0.925
+     },
+     "cob50": {
+      "n": 1093,
+      "acc_binaria": 0.971
+     },
+     "cob25": {
+      "n": 547,
+      "acc_binaria": 0.995
+     }
+    }
+   },
+   "RF classificador (E[nível])": {
+    "cob100": {
+     "n": 2186,
+     "macroF1": 0.645,
+     "ate1": 0.973,
+     "acc_binaria": 0.858
+    },
+    "cob75": {
+     "n": 1639,
+     "macroF1": 0.667,
+     "ate1": 0.977,
+     "acc_binaria": 0.896
+    },
+    "cob50": {
+     "n": 1093,
+     "macroF1": 0.618,
+     "ate1": 0.984,
+     "acc_binaria": 0.934
+    },
+    "cob25": {
+     "n": 547,
+     "macroF1": 0.475,
+     "ate1": 0.996,
+     "acc_binaria": 0.996
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2186,
+      "acc_binaria": 0.858
+     },
+     "cob75": {
+      "n": 1639,
+      "acc_binaria": 0.927
+     },
+     "cob50": {
+      "n": 1093,
+      "acc_binaria": 0.973
+     },
+     "cob25": {
+      "n": 547,
+      "acc_binaria": 0.996
+     }
+    }
+   }
+  }
+ },
+ "R3 (34–45)": {
+  "n": 2216,
+  "n_celulas": 260,
+  "metricas": {
+   "so_A (bruto)": {
+    "macroF1": 0.6059124998686798,
+    "exato": 0.60514440433213,
+    "ate1": 0.9652527075812274,
+    "spearman": 0.8448640742306748,
+    "auc_metade_alta": 0.9217123469658879,
+    "acc_binaria": 0.8434115523465704,
+    "dMacroF1_vs_contexto": [
+     -0.025,
+     -0.052,
+     -0.0
+    ],
+    "dSpearman_vs_contexto": [
+     -0.025,
+     -0.038,
+     -0.01
+    ]
+   },
+   "contexto (média histórica)": {
+    "macroF1": 0.6312445222357175,
+    "exato": 0.631768953068592,
+    "ate1": 0.9715703971119134,
+    "spearman": 0.8693469145678756,
+    "auc_metade_alta": 0.9336832423815071,
+    "acc_binaria": 0.8533393501805054,
+    "dMacroF1_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dSpearman_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "suavizada λ=.25": {
+    "macroF1": 0.6298802487826476,
+    "exato": 0.6304151624548736,
+    "ate1": 0.9720216606498195,
+    "spearman": 0.8668746226787919,
+    "auc_metade_alta": 0.9342448954564965,
+    "acc_binaria": 0.8592057761732852,
+    "dMacroF1_vs_contexto": [
+     -0.001,
+     -0.012,
+     0.013
+    ],
+    "dSpearman_vs_contexto": [
+     -0.002,
+     -0.008,
+     0.003
+    ]
+   },
+   "empírico-Bayes a=0": {
+    "macroF1": 0.6312445222357175,
+    "exato": 0.631768953068592,
+    "ate1": 0.9715703971119134,
+    "spearman": 0.8693469145678756,
+    "auc_metade_alta": 0.9336832423815071,
+    "acc_binaria": 0.8533393501805054,
+    "dMacroF1_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "dSpearman_vs_contexto": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "EB+espacial a=0 λ=0.25": {
+    "macroF1": 0.6298802487826476,
+    "exato": 0.6304151624548736,
+    "ate1": 0.9720216606498195,
+    "spearman": 0.8668744097349534,
+    "auc_metade_alta": 0.9342436691397389,
+    "acc_binaria": 0.8592057761732852,
+    "dMacroF1_vs_contexto": [
+     -0.001,
+     -0.012,
+     0.013
+    ],
+    "dSpearman_vs_contexto": [
+     -0.002,
+     -0.008,
+     0.003
+    ]
+   },
+   "XGBoost regressor": {
+    "macroF1": 0.6394610697620038,
+    "exato": 0.6403429602888087,
+    "ate1": 0.9733754512635379,
+    "spearman": 0.8826775922017494,
+    "auc_metade_alta": 0.9420148384327671,
+    "acc_binaria": 0.8619133574007221,
+    "dMacroF1_vs_contexto": [
+     0.008,
+     -0.005,
+     0.021
+    ],
+    "dSpearman_vs_contexto": [
+     0.013,
+     0.009,
+     0.018
+    ]
+   },
+   "XGBoost classificador (E[nível])": {
+    "macroF1": 0.6330183206885578,
+    "exato": 0.6340252707581228,
+    "ate1": 0.9751805054151624,
+    "spearman": 0.8816122159006425,
+    "auc_metade_alta": 0.9413959572424223,
+    "acc_binaria": 0.855595667870036,
+    "dMacroF1_vs_contexto": [
+     0.001,
+     -0.014,
+     0.016
+    ],
+    "dSpearman_vs_contexto": [
+     0.012,
+     0.008,
+     0.017
+    ]
+   },
+   "RF classificador (E[nível])": {
+    "macroF1": 0.6466546918457794,
+    "exato": 0.6475631768953068,
+    "ate1": 0.9724729241877257,
+    "spearman": 0.8817648844898434,
+    "auc_metade_alta": 0.9410157990475606,
+    "acc_binaria": 0.8610108303249098,
+    "dMacroF1_vs_contexto": [
+     0.015,
+     0.001,
+     0.03
+    ],
+    "dSpearman_vs_contexto": [
+     0.012,
+     0.008,
+     0.016
+    ]
+   }
+  },
+  "seletiva": {
+   "contexto (média histórica)": {
+    "cob100": {
+     "n": 2216,
+     "macroF1": 0.631,
+     "ate1": 0.972,
+     "acc_binaria": 0.853
+    },
+    "cob75": {
+     "n": 1667,
+     "macroF1": 0.583,
+     "ate1": 0.973,
+     "acc_binaria": 0.833
+    },
+    "cob50": {
+     "n": 1121,
+     "macroF1": 0.474,
+     "ate1": 0.986,
+     "acc_binaria": 0.872
+    },
+    "cob25": {
+     "n": 561,
+     "macroF1": 0.51,
+     "ate1": 0.996,
+     "acc_binaria": 0.986
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2216,
+      "acc_binaria": 0.853
+     },
+     "cob75": {
+      "n": 1667,
+      "acc_binaria": 0.923
+     },
+     "cob50": {
+      "n": 1109,
+      "acc_binaria": 0.975
+     },
+     "cob25": {
+      "n": 554,
+      "acc_binaria": 0.987
+     }
+    }
+   },
+   "EB+espacial a=0 λ=0.25": {
+    "cob100": {
+     "n": 2216,
+     "macroF1": 0.63,
+     "ate1": 0.972,
+     "acc_binaria": 0.859
+    },
+    "cob75": {
+     "n": 1667,
+     "macroF1": 0.588,
+     "ate1": 0.976,
+     "acc_binaria": 0.844
+    },
+    "cob50": {
+     "n": 1121,
+     "macroF1": 0.479,
+     "ate1": 0.987,
+     "acc_binaria": 0.877
+    },
+    "cob25": {
+     "n": 561,
+     "macroF1": 0.503,
+     "ate1": 0.998,
+     "acc_binaria": 0.986
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2216,
+      "acc_binaria": 0.859
+     },
+     "cob75": {
+      "n": 1662,
+      "acc_binaria": 0.924
+     },
+     "cob50": {
+      "n": 1108,
+      "acc_binaria": 0.973
+     },
+     "cob25": {
+      "n": 554,
+      "acc_binaria": 0.987
+     }
+    }
+   },
+   "XGBoost classificador (E[nível])": {
+    "cob100": {
+     "n": 2216,
+     "macroF1": 0.633,
+     "ate1": 0.975,
+     "acc_binaria": 0.856
+    },
+    "cob75": {
+     "n": 1662,
+     "macroF1": 0.647,
+     "ate1": 0.98,
+     "acc_binaria": 0.889
+    },
+    "cob50": {
+     "n": 1108,
+     "macroF1": 0.628,
+     "ate1": 0.986,
+     "acc_binaria": 0.938
+    },
+    "cob25": {
+     "n": 554,
+     "macroF1": 0.621,
+     "ate1": 0.998,
+     "acc_binaria": 0.996
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2216,
+      "acc_binaria": 0.856
+     },
+     "cob75": {
+      "n": 1662,
+      "acc_binaria": 0.937
+     },
+     "cob50": {
+      "n": 1108,
+      "acc_binaria": 0.981
+     },
+     "cob25": {
+      "n": 554,
+      "acc_binaria": 1.0
+     }
+    }
+   },
+   "RF classificador (E[nível])": {
+    "cob100": {
+     "n": 2216,
+     "macroF1": 0.647,
+     "ate1": 0.972,
+     "acc_binaria": 0.861
+    },
+    "cob75": {
+     "n": 1662,
+     "macroF1": 0.665,
+     "ate1": 0.979,
+     "acc_binaria": 0.896
+    },
+    "cob50": {
+     "n": 1108,
+     "macroF1": 0.628,
+     "ate1": 0.987,
+     "acc_binaria": 0.94
+    },
+    "cob25": {
+     "n": 554,
+     "macroF1": 0.476,
+     "ate1": 1.0,
+     "acc_binaria": 1.0
+    },
+    "binaria_por_margem": {
+     "cob100": {
+      "n": 2216,
+      "acc_binaria": 0.861
+     },
+     "cob75": {
+      "n": 1662,
+      "acc_binaria": 0.932
+     },
+     "cob50": {
+      "n": 1108,
+      "acc_binaria": 0.975
+     },
+     "cob25": {
+      "n": 554,
+      "acc_binaria": 1.0
+     }
+    }
+   }
+  }
+ }
+}

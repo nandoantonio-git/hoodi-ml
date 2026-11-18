@@ -67,3 +67,40 @@ def test_fixture_sem_identificador_de_bo_e_com_sem_dado(tmp_path):
     assert "BO-SECRETO" not in txt and "NUM_BO" not in txt
     fx = json.loads((tmp_path / "fixture_v2.json").read_text())
     assert any(c["status"] == "sem_dado" and c["nivel"] is None for c in fx["chaves"])
+
+
+# ---- validação semântica (H-10) ----
+import pytest
+
+from ml import config as C
+
+
+def _valido():
+    return snapshot.montar(usadas({}, {}, {}), CORTES)
+
+
+def test_validar_aceita_o_que_o_montar_produz():
+    snapshot.validar(_valido())
+
+
+def test_validar_recusa_violacoes_do_contrato():
+    base = _valido()
+    com = base.index[base.status == "com_dado"][0]
+    sem = base.index[base.status == "sem_dado"][0]
+    casos = {
+        "duplicada": pd.concat([base, base.iloc[[0]]], ignore_index=True),
+        "colunas": base.drop(columns=["n_registros"]),
+        "faixa_faltando": base[base.faixa != 4],
+        "status": base.assign(status=base.status.replace("sem_dado", "talvez")),
+        "k_baixo": base.assign(n_registros=base.n_registros.where(base.index != com, 2)),
+        "nivel_fora": base.assign(nivel=base.nivel.where(base.index != com, 7)),
+        "sem_dado_vaza_nivel": base.assign(nivel=base.nivel.where(base.index != sem, 1)),
+        "celula_invalida": base.assign(h3_cell=base.h3_cell.where(base.index != sem, "xyz")),
+    }
+    for nome, snap in casos.items():
+        with pytest.raises(snapshot.SnapshotInvalido):
+            snapshot.validar(snap)
+
+
+def test_snapshot_publicado_no_repositorio_e_valido():
+    snapshot.validar_arquivos(C.SNAPSHOT)
