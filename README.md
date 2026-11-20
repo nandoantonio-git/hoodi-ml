@@ -1,8 +1,8 @@
 # hoodi — módulo de Machine Learning (Global Solution CitizenTech, FIAP)
 
-> **Natureza do resultado:** mapa **histórico observado** de ocorrências registradas pela SSP-SP (contrato de entrega v2: jan–set/2026; o v3 semestral, abr–set/2026, é candidato aceito só para a fase 2), por área (célula H3, resolução 9) e faixa horária. É o melhor dado disponível no período. **Não** indica risco em tempo real, **não** prevê o futuro e **não** aponta lugar seguro.
+> **Natureza do resultado:** mapa **histórico observado** de ocorrências registradas pela SSP-SP (contrato de entrega v2: jan–set/2026), por área (célula H3, resolução 9) e faixa horária. **Não** é previsão, **não** é risco em tempo real e **não** aponta lugar seguro. O backtest é retrospectivo.
 
-O hoodi é um aplicativo de apoio à decisão para quem anda a pé por São Paulo: mostra no mapa o nível de ocorrências registradas por área e horário e avisa quando a pessoa entra em uma área de nível alto. A comparação de rotas de carro é a fase 2, depois da entrega. Este repositório contém **somente o módulo de ML**: ingestão do dado público, construção do mapa de níveis, avaliação honesta de modelos e os contratos que a API e o app consomem.
+Este repositório contém **somente o módulo de ML** do hoodi: ingestão do dado público, construção do rótulo, avaliação temporal de modelos, calibração e o mapa de níveis que o app consome. O foco aqui é o **processo de ML**: dado, rótulo, protocolo, modelos, resultados e decisão.
 
 ## Ficha CitizenTech
 - **Equipe e RMs:** Abner Barbosa (RM558468), Beatriz Vieira de Novais (RM554746), Fernando Antonio (RM555201) e Mariana Neugebauer (RM550494).
@@ -12,94 +12,70 @@ O hoodi é um aplicativo de apoio à decisão para quem anda a pé por São Paul
 - **Justificativa dos ODS:** ODS 11: o hoodi apoia a decisão de deslocamento na cidade, com alerta ambiente a pé por exposição histórica a ocorrências, em linha com a meta de transporte mais seguro. ODS 11 é o principal. ODS 16 (secundário): usa só dado público oficial (SSP-SP), com método, limites e código abertos. É um indicador histórico observado, não garantia de segurança nem previsão.
 
 ## Sumário
-1. [Arquitetura e papel do ML](#arquitetura-e-papel-do-ml)
-2. [O que este módulo entrega](#o-que-este-módulo-entrega)
-3. [Dados](#dados)
-4. [Contrato do snapshot (v2)](#contrato-do-snapshot-v2)
-5. [Resultados](#resultados)
-6. [Privacidade e uso responsável](#privacidade-e-uso-responsável)
-7. [Como reproduzir](#como-reproduzir)
-8. [Testes](#testes)
-9. [Estrutura do repositório](#estrutura-do-repositório)
-10. [Processo: especificação, revisões e decisões](#processo-especificação-revisões-e-decisões)
-11. [Limites conhecidos e próximos passos](#limites-conhecidos-e-próximos-passos)
+1. [O processo de ML](#o-processo-de-ml)
+2. [Resultados](#resultados)
+3. [O que este módulo entrega](#o-que-este-módulo-entrega)
+4. [Como reproduzir](#como-reproduzir)
+5. [Testes](#testes)
+6. [Estrutura do repositório](#estrutura-do-repositório)
+7. [Evidências do processo](#evidências-do-processo)
+8. [Limites conhecidos](#limites-conhecidos)
 
-## Arquitetura e papel do ML
+## O processo de ML
 
 ```
-SSP-SP (XLSX público) ──► ml/ (lote, Python) ──► snapshot CSV + sha256 + manifest
-                                                        │
-                                                        ▼
-                                            API .NET (serve o snapshot,
-                                            pontua rotas pelos vetores-ouro)
-                                                        │
-                                                        ▼
-                                            App Expo (mapa, alerta de
-                                            proximidade no aparelho, offline)
+SSP-SP (XLSX público) → ingestão e reconciliação → rótulo por célula H3 × faixa
+   → features só do passado → treino/validação temporais → teste (ago–set/2026)
+   → intervalos por bootstrap → calibração → decisão → snapshot CSV + SHA-256
 ```
 
-- O ML roda **em lote**, fora do caminho do usuário. Nada é calculado em tempo real.
-- A API só aceita um snapshot cujo SHA-256 seja o do contrato vigente. Hash diferente = falha fechada, sem alerta.
-- O app aplica a política de proximidade localmente, com o snapshot embarcado.
+### 1. Dados
+- **Fonte:** SSP-SP, portal da Transparência, `SPDadosCriminais_2026.xlsx` (URL e SHA-256 em `ml/dados/README.md`; o conversor aborta se o hash divergir). Dado real, não simulado.
+- **Janela e recorte:** jan–set/2026, perímetro de 5×5 km em volta da FIAP Paulista.
+- **Volume:** 814.900 linhas no arquivo; 20.657 com coordenada e hora dentro do perímetro; **20.343 usadas na modelagem** (após remover 307 fora da janela e duplicatas/conflitos de BO).
+- **Reconciliação:** entrada = usadas + quarentena + duplicatas + fora da janela, sem resto. Linhas sem hora, sem coordenada ou com BO conflitante vão para quarentena com o motivo registrado (`ml/dados/reconciliacao*.txt`).
+- **O dado bruto não está no Git.** Só agregados por célula e faixa são versionados.
 
-## O que este módulo entrega
+### 2. Rótulo
+- **Unidade:** célula H3 resolução 9 (≈ 0,1 km²) × 5 faixas horárias: madrugada [0,6), manhã [6,12), tarde [12,18), noite cedo [18,21), noite [21,24). São 279 células × 5 faixas = 1.395 chaves.
+- **Alvo:** `pontuacao_mensal` = soma dos pesos ÷ 9 meses ÷ horas da faixa; `nivel` 0–3 pelos três cortes de quartil calculados **só no treino**.
+- **Supressão k ≥ 3:** chaves com 1 ou 2 registros viram `sem_dado`, nunca nível 0. Resultado: 954 `com_dado` e 441 `sem_dado` (223 sem registro, 218 suprimidas).
 
-| Entregável | Onde |
-|---|---|
-| **Snapshot v2 (contrato de entrega)**: jan–set/2026, 5×5 km, k ≥ 3, 954 chaves `com_dado`, SHA-256 `2dddef70…5080a` | `ml/dados/snapshot/` |
-| Snapshot v3 (candidato, fase 2): semestral abr–set/2026, 824 chaves `com_dado`, SHA-256 `e33bd004…c71c0da` | `ml/dados/snapshot_v3/` |
-| Derivados v3: política de proximidade e vetores de rota | `docs/contratos-v3/politica_proximidade_v3.json`, `vetores_rota_v3.json` |
-| Fixture de 5 linhas para testes dos consumidores | `ml/dados/snapshot/fixture_v2.json` |
-| Política de alerta de proximidade (parâmetros e casos) | `docs/contratos-v3/politica_proximidade_v2.json` |
-| Vetores-ouro para validar a pontuação de rota na API | `docs/contratos-v3/vetores_rota_v2.json` + `rota_pontuacao_v1.md` |
-| Notebook documentado de ponta a ponta, executado | `notebooks/hoodi_ml_documentado.ipynb` |
-| Relatório com métricas, intervalos, calibração e limites | `RELATORIO_ML.md` |
-| Proveniência, inventário e privacidade dos dados | `ml/dados/README.md` |
-| Revisão de código e quatro rodadas de red-team independente | `docs/REVISAO-CODIGO-2026-11-16.md`, `docs/REDTEAM-ENTREGA-rodada*.md` |
-| Registro dos prompts de IA usados no trabalho | `prompts.md` |
+### 3. Protocolo de avaliação
+- Divisão **temporal**: origens T1–T4 no treino (3.132 exemplos); teste ago–set/2026 (847 exemplos).
+- Features só com meses anteriores ao alvo; validação cruzada com expurgo, só no treino.
+- **Seleção pré-registrada:** o vencedor da CV (Random Forest) foi gravado em `selecao_modelo.json` antes de abrir o teste.
+- Intervalos por bootstrap pareado, 2.000 reamostras por célula.
+- Tudo o que veio depois da abertura do teste é **exploração com `test_seen = true`**: RF regularizado, LSTM, KMeans+PCA, regra de custo, histórico 2023–2025 e calibração.
 
-## Dados
-
-- **Fonte:** SSP-SP, portal da Transparência, arquivo `SPDadosCriminais_2026.xlsx`. URL, tamanho e SHA-256 em `ml/dados/README.md`; o conversor aborta se o hash divergir.
-- **Janela:** 1º de janeiro a 30 de setembro de 2026, fuso America/Sao_Paulo.
-- **Volume:** 814.900 linhas no arquivo; 20.657 com coordenada e hora dentro do perímetro (todo o ano); **20.343 usadas na modelagem** (jan–set/2026, após remover 307 fora da janela e as duplicatas/conflitos de BO), 2,50 % da base e 58,5 % do que cai no perímetro.
-- **Reconciliação:** entrada = usadas + quarentena + duplicatas removidas + fora da janela, sem resto. Linhas sem hora, sem coordenada ou com BO conflitante vão para a quarentena com o motivo registrado (`ml/dados/reconciliacao*.txt`).
-- **Unidade de análise:** célula H3 resolução 9 (≈ 0,1 km²) × 5 faixas horárias: madrugada [0,6), manhã [6,12), tarde [12,18), noite cedo [18,21), noite [21,24).
-- **Rótulo:** `pontuacao_mensal` = soma dos pesos ÷ 9 meses ÷ horas da faixa; `nivel` 0–3 pelos três cortes de quartil calculados **só no treino**.
-- **O dado bruto não está no Git.** Apenas agregados por célula e faixa são versionados.
-
-> **Contrato de entrega: v2** (`ml/dados/snapshot/`, 1.395 chaves, 954 `com_dado` e 441 `sem_dado`). O v3 (`ml/dados/snapshot_v3/`: 824 `com_dado` e 571 `sem_dado`) tem o mesmo formato, é aceito pelo decoder só para a fase 2 e não foi adotado: o ganho de estabilidade não justificou trocar o padrão, e a janela foi escolhida em teste exploratório já visto.
-
-## Contrato do snapshot (formato v2/v3)
-
-Arquivo: `ml/dados/snapshot/risco_h3_faixa_v2.csv` · SHA-256: `2dddef701bdecb65142874980f1ae5aba7b2ac6ab2abad5c47b07f07ecc5080a` · `contrato_versao = 2`.
-
-| Coluna | Tipo | Significado |
+### 4. Modelos testados
+| Modelo | Situação | Por que entrou |
 |---|---|---|
-| `h3_cell` | texto | índice H3 resolução 9 |
-| `faixa` | 0–4 | faixa horária |
-| `faixa_nome` | texto | nome da faixa |
-| `status` | `com_dado` \| `sem_dado` | se há nível publicado |
-| `nivel` | 0–3 ou vazio | nível observado; **vazio** quando `sem_dado` (nunca 0 por ausência) |
-| `pontuacao_mensal` | decimal ou vazio | base do nível |
-| `n_registros` | inteiro | ocorrências na chave; 0 quando `sem_dado` |
-
-Invariantes verificadas por teste: 1.395 chaves no universo; 954 `com_dado`, todas com `n_registros ≥ 3`; 441 `sem_dado`. Chaves com 1 ou 2 registros são publicadas como `sem_dado` e são **indistinguíveis de ausência**; o manifesto guarda só os totais agregados da supressão (218 chaves, 306 registros). A especificação completa está em `specs/001-risco-h3-faixa-horaria/contracts/snapshot-risco.md`.
+| Classe mais frequente, persistência (nível da janela anterior) | base | piso e a base realista a bater |
+| Random Forest | pré-registrado | não paramétrico, robusto, explicável por importância |
+| XGBoost, MLP | pré-registrados | mais liberdade de ajuste, para medir o que ela agrega |
+| LSTM | exploração | testa estrutura sequencial no histórico |
+| KMeans + PCA | exploração | abordagem não supervisionada |
+| Random Forest regularizado (`max_depth` 6, `min_samples_leaf` 80) | exploração | limita a liberdade do RF; hiperparâmetros escolhidos por CV |
 
 ## Resultados
 
-Protocolo: divisão **temporal** (origens T1–T4 no treino, 3.132 exemplos; teste ago–set/2026, 847 exemplos), features só com meses anteriores ao alvo, seleção por validação cruzada com expurgo só no treino, vencedor pré-registrado antes de abrir o teste, intervalos por bootstrap pareado (2.000 reamostras por célula). Detalhes e tabela completa em `RELATORIO_ML.md`.
+Teste ago–set/2026, n = 847. Tabela completa (custo médio, recall e precisão de risco alto) em `RELATORIO_ML.md`, seção 4.
 
-| Modelo | Macro-F1 [IC 95 %] | Nível exato | Erro ≤ 1 nível |
-|---|---|---|---|
-| Persistência (nível da janela anterior) | 0,491 [0,457; 0,524] | 50,2 % | 87,5 % |
-| Random Forest pré-registrado | 0,467 [0,432; 0,500] | — | — |
-| **Random Forest regularizado** (exploratório) | **0,513 [0,479; 0,546]** | 52,3 % | 88,7 % |
+| Modelo | Macro-F1 [IC 95 %] | Gap treino−teste |
+|---|---|---|
+| Persistência | 0,491 [0,457; 0,524] | −0,02 |
+| Random Forest pré-registrado | 0,467 [0,432; 0,500] | **0,36** |
+| XGBoost | 0,476 [0,441; 0,509] | 0,17 |
+| MLP | 0,477 [0,443; 0,510] | 0,05 |
+| LSTM | 0,492 [0,459; 0,525] | 0,09 |
+| KMeans + PCA | 0,503 [0,467; 0,535] | −0,01 |
+| **Random Forest regularizado** (exploratório) | **0,513 [0,479; 0,546]** | ≈ 0 |
 
-- A diferença pareada RF regularizado − persistência em macro-F1 é +0,022 [−0,010; 0,052]: **não ficou estabelecida**.
-- O RF regularizado subestimou menos o nível registrado e teve menor custo médio de erro, mas foi escolhido depois de ver o teste (`test_seen = true`). É evidência exploratória, não prova de superioridade.
+- **Descoberta:** os modelos com mais liberdade de ajuste foram os mais sensíveis ao ruído do dado. Os registros são esparsos e variam de mês a mês; o RF pré-registrado sobreajusta (gap 0,36) e a regularização escolhida por CV leva o gap a ≈ 0.
+- A diferença pareada RF regularizado − persistência em macro-F1 é +0,022 [−0,010; 0,052]: **não ficou estabelecida**. O regularizado foi escolhido depois de ver o teste (`test_seen = true`): evidência exploratória, não prova de superioridade.
 - Calibração: ECE 0,047 sem pós-processamento; a calibração isotônica piorou para 0,105 e foi rejeitada.
-- O RF pré-registrado sobreajusta (gap treino−teste 0,36); a regularização escolhida por CV leva o gap a ≈ 0.
+- **Decisão:** nenhum modelo superou a persistência de forma estabelecida. O que vai para o app é o **mapa observado** (média histórica por célula), determinístico e explicável, não a saída de um modelo.
 
 ### Rastreio no MLflow
 
@@ -113,15 +89,20 @@ Os resultados já gravados em `ml/dados/resultados/` foram registrados no MLflow
 | 4 · v2, ablação de histórico | ![Ablação de histórico](docs/mlflow/04_v2_ablacao_historia.png) |
 | 5 · v3, exploratório (alerta e rotas) | ![Exploratório v3](docs/mlflow/05_v3_exploratorio.png) |
 
-**Decisão de produto:** o que vai para o app é o **mapa observado**, não a saída de um modelo preditivo.
+## O que este módulo entrega
 
-## Privacidade e uso responsável
+| Entregável | Onde |
+|---|---|
+| Notebook documentado de ponta a ponta, executado | `ml/hoodi_ml_documentado.ipynb` (cópia em `notebooks/`) |
+| Relatório com métricas, intervalos, calibração e limites | `RELATORIO_ML.md` |
+| **Snapshot v2 (contrato de entrega)**: 954 chaves `com_dado`, SHA-256 `2dddef701bdecb65142874980f1ae5aba7b2ac6ab2abad5c47b07f07ecc5080a` | `ml/dados/snapshot/` |
+| Métricas, seleção, calibração e backtest agregado | `ml/dados/resultados/` |
+| Proveniência, inventário e privacidade dos dados | `ml/dados/README.md` |
+| Registro dos prompts de IA usados | `prompts.md` |
 
-- Nenhuma coordenada de ocorrência, número de BO ou campo individual é versionado; só agregados por célula e faixa. As únicas coordenadas no repositório são o polígono do perímetro de estudo (manifesto) e pontos sintéticos dos casos de teste de rota (vetores-ouro).
-- Supressão k ≥ 3 por chave; o backtest publicado tem apenas métricas agregadas por modelo, sem associação com célula ou faixa.
-- Hash obrigatório em todos os derivados; consumidor com hash diferente deve falhar fechado.
-- O texto do app nunca diz "seguro": `sem_dado` é mostrado como "dados insuficientes para exibição".
-- Inventário por camada (conteúdo, acesso, retenção, descarte) em `ml/dados/README.md`.
+O snapshot é um CSV (`h3_cell`, `faixa`, `status`, `nivel`, `pontuacao_mensal`, `n_registros`) com SHA-256 obrigatório; consumidor com hash diferente falha fechado. Contrato completo em `specs/001-risco-h3-faixa-horaria/contracts/snapshot-risco.md`. O candidato v3 (semestral, abr–set/2026, 824 chaves) e os derivados de alerta e rota (`docs/contratos-v3/`) são da fase 2 e não foram adotados: o ganho de estabilidade não justificou trocar o padrão, e a janela foi escolhida em teste exploratório já visto.
+
+**Privacidade:** nenhuma coordenada de ocorrência, número de BO ou campo individual é versionado; só agregados por célula e faixa, com supressão k ≥ 3. Hash obrigatório em todos os derivados.
 
 ## Como reproduzir
 
@@ -139,58 +120,60 @@ python -m ml.gerar_snapshot                  # snapshot + manifest + fixture
 python -m ml.modelos                         # seleção por CV e avaliação no teste
 python -m ml.incerteza_custo                 # IC por bootstrap, RF regularizado e custo
 python -m ml.calibracao                      # calibração, estratos e backtest agregado
-python -m ml.politica_proximidade            # política de proximidade v2
-python -m ml.rota                            # vetores-ouro de rota v2
 
-pytest -q                                    # suíte completa (100 testes)
+pytest -q
 ```
 
-O snapshot regenerado tem o mesmo SHA-256 do versionado; só o campo `gerado_em` do manifesto muda. O conversor cria `ml/dados/interim/` e instala/carrega a extensão `excel` do DuckDB (a primeira execução precisa de rede para baixá-la).
+O snapshot regenerado tem o mesmo SHA-256 do versionado; só o campo `gerado_em` do manifesto muda. O conversor cria `ml/dados/interim/` e instala/carrega a extensão `excel` do DuckDB (a primeira execução precisa de rede).
 
-O notebook `notebooks/hoodi_ml_documentado.ipynb` é a fonte única e é editado diretamente. Para reexecutá-lo, rode `jupyter nbconvert --execute --to notebook --inplace notebooks/hoodi_ml_documentado.ipynb` dentro de `notebooks/` (caminhos relativos). `scripts/gerar_notebook.py` está aposentado e não deve ser executado: ele sobrescreveria o notebook com uma versão antiga.
+Para reexecutar o notebook: `jupyter nbconvert --execute --to notebook --inplace ml/hoodi_ml_documentado.ipynb`, rodando de dentro de `ml/` ou `notebooks/` (caminhos relativos). `scripts/gerar_notebook.py` está aposentado e não deve ser executado: sobrescreveria o notebook com uma versão antiga.
 
 ## Testes
 
-`pytest -q` roda 100 testes em 17 arquivos. O que eles garantem:
+`pytest -q` coleta 115 testes em 20 arquivos de teste. O que garantem:
 
 | Grupo | Arquivos | Garantia |
 |---|---|---|
 | Reconciliação do dado | `test_quarentena`, `test_dedup`, `test_janela`, `test_schema_processed` | nada se perde nem se duplica na ingestão |
 | Sem vazamento temporal | `test_split_temporal`, `test_cortes_treino`, `test_features_taxas` | teste nunca entra no treino; cortes só do treino |
-| Contrato do snapshot | `test_snapshot`, `test_sem_dado`, `test_idempotencia`, `test_schemas_derivados` | k ≥ 3, `sem_dado` sem nível, hash reproduzível, derivados amarrados |
-| Produto | `test_politica_proximidade`, `test_rota` | política determinística; vetores-ouro batem com a implementação de referência |
+| Contrato do snapshot | `test_snapshot`, `test_sem_dado`, `test_idempotencia`, `test_schemas_derivados` | k ≥ 3, `sem_dado` sem nível, hash reproduzível |
 | Modelagem | `test_calibracao`, `test_sequenciais`, `test_ta_descritiva`, `test_v2_historico` | métricas, backtest agregado sem célula/faixa, histórico v2 |
 
-Os cinco arquivos de modelagem importam `torch` e são os mais lentos para iniciar.
+Os testes de modelagem importam `torch` e são os mais lentos. `test_ta_descritiva` precisa de `ml/dados/processed/` (gerado pela ingestão; não versionado).
 
 ## Estrutura do repositório
 
 ```
-ml/                 ingestão, rótulo, features, modelos, snapshot, política de proximidade, rota
+ml/                 ingestão, rótulo, features, modelos, calibração, snapshot
 ml/dados/snapshot/  snapshot v2, sha256, manifest e fixture (entregáveis)
 ml/dados/resultados/ métricas, seleção, calibração e backtest agregado (JSON/CSV)
-docs/contratos-v3/  política de proximidade v2, vetores de rota v2 e o contrato de pontuação de rota
-docs/               especificação, decisões, revisões e todas as rodadas de red-team
-specs/              spec-kit: spec, plano, modelo de dados, contrato, quickstart e tarefas
-scripts/            conversão do XLSX, qualidade do dado, geração do notebook, registro no MLflow
-notebooks/          notebook documentado e executado
+notebooks/          notebook documentado e executado (cópia em ml/)
+scripts/            conversão do XLSX, qualidade do dado, registro no MLflow
+docs/               especificação, red-team, decisões de privacidade, prints do MLflow
+docs/fase2-produto/ alerta e rotas (fase 2, fora do escopo de ML)
+specs/              spec-kit: spec, plano, modelo de dados, contrato e tarefas
 tests/              suíte pytest
 RELATORIO_ML.md     relatório técnico
-prompts.md          registro dos prompts de IA usados
 ```
 
-## Processo: especificação, revisões e decisões
+## Evidências do processo
 
-O trabalho seguiu especificação antes do código (`specs/`), pré-registro dos candidatos e revisão independente a cada entrega:
+O trabalho seguiu especificação antes do código (`specs/`, `docs/SPEC-ML.md`), pré-registro dos candidatos e revisão independente em cada fase. A revisão foi feita por um revisor automatizado separado (Codex CLI, somente leitura); os relatórios estão preservados sem edição. Esta tabela resume o que cada fase encontrou e o que mudou no método ou nos números:
 
-- `docs/SPEC-ML.md`, `docs/DECISOES-V3.md` e `docs/PLANO-EXECUCAO-V3-r*.md`: o que foi decidido e por quê.
-- `docs/REDTEAM-*.md`: rodadas de red-team feitas por um revisor automatizado independente, em modo somente leitura, com os achados e o que foi corrigido em cada uma.
-- `docs/REVISAO-CODIGO-2026-11-16.md`: revisão de segurança, contratos, cobertura (76 % total; 82–100 % nos módulos de contrato) e disposição de cada achado.
-- `docs/DECISAO-PRIVACIDADE-SNAPSHOT-V2.md`: a decisão humana que criou o contrato v2 e o saneamento do histórico.
+| Fase | Relatórios | Principais achados | O que mudou |
+|---|---|---|---|
+| Especificação (6 rodadas) | `docs/REDTEAM-SPEC-rodada1…6.md`, `docs/DECISOES-REDTEAM-rodada3.md` | Fórmula do rótulo ambígua (soma × taxa mensal); teste já usado na aprovação de uma tarefa; privacidade sem verificação | Fórmula única (pesos ÷ meses ÷ horas da faixa) com teste numérico; teste reservado; supressão k ≥ 3 |
+| Pipeline v2 e histórico (4 rodadas) | `docs/REDTEAM-V2-rodada1…4.md` | Coordenadas persistidas em `processed/`; validação contaminada pelos cortes do próprio período; evidência pareada sobre o modelo errado; "mais histórico não ajuda" forte demais | Coordenadas removidas; cortes só do treino; comparações pareadas sobre o vencedor; conclusão reescrita como inconclusiva (IC inclui zero) |
+| Entrega (4 rodadas) | `docs/REDTEAM-ENTREGA-rodada1…4.md`, `docs/DECISAO-PRIVACIDADE-SNAPSHOT-V2.md` | Ficha ausente; backtest permitia recuperar contagens por subtração; receita de reprodução falhava em checkout limpo; 218 pares suprimidos | Contrato v2 (954 chaves); backtest só agregado; reprodução corrigida; 0 bloqueantes ao final |
+| Código e privacidade do v3 | `docs/REDTEAM-CODEX-2026-11-18.md`, `docs/REVISAO-CODIGO-2026-11-16.md` | Itens rastreados e consistência do snapshot candidato | Corrigidos; v3 não adotado |
 
-## Limites conhecidos e próximos passos
+Cada relatório lista os achados com arquivo e linha, severidade e a correção aplicada. O registro dos prompts de IA está em `prompts.md`.
+
+Os documentos de alerta de proximidade e escolha de rota (proposta, plano, decisões e as revisões desses textos) tratam de produto e de fase 2; ficam em `docs/fase2-produto/` e não fazem parte da avaliação do processo de ML.
+
+## Limites conhecidos
 
 - O mapa descreve **registros**, não ocorrências reais: subnotificação e variação de registro entre regiões afetam o resultado.
-- Nove meses de dado; sem validação com pessoas em uso real. A política de proximidade é demonstração retrospectiva.
-- Nenhum modelo superou a persistência de forma estabelecida; o app usa o mapa observado.
-- Próximos passos em `RELATORIO_ML.md`, seção 9.
+- Nove meses de dado; sem validação com pessoas em uso real. O backtest é retrospectivo.
+- A seleção do RF foi pré-registrada; tudo o que veio depois do teste é exploratório.
+- Próximos passos em `RELATORIO_ML.md`, seção 10.

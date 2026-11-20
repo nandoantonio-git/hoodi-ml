@@ -26,7 +26,7 @@ Uso do resultado: `scripts/gerar_notebook.py`, `notebooks/hoodi_ml_documentado.i
 
 ## 2026-11-15 — v3: da previsão à decisão no app (JARVIS, Claude; red-team Codex CLI)
 Prompt (resumo fiel): o Nando perguntou se o trabalho respeitava a arquitetura decidida (ML em lote → API .NET do Abner → app Expo) e pediu um plano de AI Engineer sênior; aprovou as duas partes ("1ok 2ok entra, implemente agora"): política de alerta de proximidade aplicada no aparelho e referência de pontuação de rota com vetores-ouro para a API .NET, mais o teste descritivo de alerta (T-A).
-Uso do resultado: `ml/politica_proximidade.py`, `ml/rota.py`, `ml/ta_descritiva.py`, `docs/contratos-v3/`, seções 9–11 do notebook; red-team real em `docs/REDTEAM-V3-*.md` e `docs/REDTEAM-IMPL-V3-*.md`; decisões em `docs/DECISOES-V3.md`.
+Uso do resultado: `ml/politica_proximidade.py`, `ml/rota.py`, `ml/ta_descritiva.py`, `docs/contratos-v3/`, seções 9–11 do notebook; red-team real em `docs/fase2-produto/REDTEAM-V3-*.md` e `docs/fase2-produto/REDTEAM-IMPL-V3-*.md`; decisões em `docs/fase2-produto/DECISOES-V3.md`.
 
 ## 2026-11-16 — Revisão de código, métricas e segredos (JARVIS, Claude)
 Prompt (resumo fiel): "como AI Engineer e Software Engineer sênior, monte um plano completo de code review com métricas e testes, campos a serem verificados, vazamento de segredos" e, em seguida, "fazer esse plano agora".

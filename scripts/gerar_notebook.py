@@ -665,7 +665,7 @@ md("""
 2. entre 3–4 rotas de carro, escolher a de melhor índice de ocorrências.
 
 Esta seção registra, sem retocar, o que a solução das seções 1–8 entrega para essas duas decisões
-(proposta `docs/PROPOSTA-V3-ALERTA-ROTAS-r3.md`, revisada em 3 rodadas de red-team real do Codex).
+(proposta `docs/fase2-produto/PROPOSTA-V3-ALERTA-ROTAS-r3.md`, revisada em 3 rodadas de red-team real do Codex).
 
 **Veredito (r3 §0): a solução v1/v2 não implementa nem valida nenhuma das duas decisões.** Ela tem insumos que uma
 decisão futura pode usar; a decisão em si não existia.
@@ -738,7 +738,7 @@ md("""
 
 ### 10.1 Política de proximidade (bloco A)
 
-**Escolha (decisão do Nando, 15/11, registrada em `docs/DECISOES-V3.md`: aditivo A "sim", `L = 3`; blocos B e C também aprovados):**
+**Escolha (decisão do Nando, 15/11, registrada em `docs/fase2-produto/DECISOES-V3.md`: aditivo A "sim", `L = 3`; blocos B e C também aprovados):**
 - `L = 3`: elegível = chave com `status=com_dado` e `nivel ≥ 3`.
 - Anel `k = 1`: avisa se a célula atual ou uma vizinha for elegível.
 - Cooldown de 30 min por célula elegível.
@@ -901,14 +901,14 @@ md("""
 
 | item | onde |
 |---|---|
-| proposta e plano | `docs/PROPOSTA-V3-ALERTA-ROTAS-r3.md`, `docs/PLANO-EXECUCAO-V3-r2.md` |
+| proposta e plano | `docs/fase2-produto/PROPOSTA-V3-ALERTA-ROTAS-r3.md`, `docs/fase2-produto/PLANO-EXECUCAO-V3-r2.md` |
 | política de proximidade | `ml/politica_proximidade.py` → `docs/contratos-v3/politica_proximidade_v2.json` (+ `.sha256`) |
 | pontuação de rota | `ml/rota.py`, `docs/contratos-v3/rota_pontuacao_v1.md`, `vetores_rota_v2.json` (+ `.sha256`) |
 | T-A descritiva | `ml/ta_descritiva.py` → `ml/dados/resultados/ta_lambda.json`, `ta_descritiva.json` |
-| MLflow | experimento `5 · v3 · exploratório (alerta e rotas)`, tag `experimento_logico=hoodi-v3-exploratorio` (o nome lógico do plano; ver `docs/DECISOES-V3.md`), `scripts/registrar_mlflow.py` |
-| decisões do Nando | `docs/DECISOES-V3.md` |
+| MLflow | experimento `5 · v3 · exploratório (alerta e rotas)`, tag `experimento_logico=hoodi-v3-exploratorio` (o nome lógico do plano; ver `docs/fase2-produto/DECISOES-V3.md`), `scripts/registrar_mlflow.py` |
+| decisões do Nando | `docs/fase2-produto/DECISOES-V3.md` |
 | testes | `tests/test_politica_proximidade.py`, `tests/test_rota.py`, `tests/test_ta_descritiva.py` |
-| red-team (Codex CLI, revisão real) | `docs/REDTEAM-V3-rodada*.md`, `docs/REDTEAM-PLANO-V3-rodada*.md`, `docs/REDTEAM-IMPL-V3-rodada*.md` |
+| red-team (Codex CLI, revisão real) | `docs/fase2-produto/REDTEAM-V3-rodada*.md`, `docs/fase2-produto/REDTEAM-PLANO-V3-rodada*.md`, `docs/fase2-produto/REDTEAM-IMPL-V3-rodada*.md` |
 """)
 
 nb = nbf.v4.new_notebook(cells=celulas, metadata={"kernelspec": {"name": "python3", "display_name": "Python 3",

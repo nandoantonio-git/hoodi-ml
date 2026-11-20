@@ -91,7 +91,7 @@ def v2():
 CONTRATOS = RAIZ / "docs" / "contratos-v3"
 EXP_V3 = "5 · v3 · exploratório (alerta e rotas)"
 TAGS_V3 = {"test_seen": "true", "natureza": "demonstracao", "experimento_logico": "hoodi-v3-exploratorio",
-           "plano": "docs/PLANO-EXECUCAO-V3-r2.md"}
+           "plano": "docs/fase2-produto/PLANO-EXECUCAO-V3-r2.md"}
 
 
 def _prov_v3(arq):
