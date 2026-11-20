@@ -101,6 +101,18 @@ Protocolo: divisão **temporal** (origens T1–T4 no treino, 3.132 exemplos; tes
 - Calibração: ECE 0,047 sem pós-processamento; a calibração isotônica piorou para 0,105 e foi rejeitada.
 - O RF pré-registrado sobreajusta (gap treino−teste 0,36); a regularização escolhida por CV leva o gap a ≈ 0.
 
+### Rastreio no MLflow
+
+Os resultados já gravados em `ml/dados/resultados/` foram registrados no MLflow local (`scripts/registrar_mlflow.py`), sem retreinar nada, para comparar as execuções. A fonte da verdade continua sendo os JSON/CSV versionados.
+
+| Experimento | Print |
+|---|---|
+| 1 · v1, seleção por validação cruzada | ![Seleção por CV](docs/mlflow/01_v1_selecao_cv_top.png) |
+| 2 · v1, treino e teste | ![Treino e teste](docs/mlflow/02_v1_treino_teste.png) |
+| 3 · v2, histórico 2023–2026 (desenhos A e B) | ![Desenhos A e B](docs/mlflow/03_v2_desenhos_A_B.png) |
+| 4 · v2, ablação de histórico | ![Ablação de histórico](docs/mlflow/04_v2_ablacao_historia.png) |
+| 5 · v3, exploratório (alerta e rotas) | ![Exploratório v3](docs/mlflow/05_v3_exploratorio.png) |
+
 **Decisão de produto:** o que vai para o app é o **mapa observado**, não a saída de um modelo preditivo.
 
 ## Privacidade e uso responsável
