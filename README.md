@@ -61,6 +61,19 @@ SSP-SP (XLSX público) → ingestão e reconciliação → rótulo por célula H
 
 **Raciocínio:** a escala de liberdade vai da persistência (nenhuma) à LSTM e ao XGBoost (muita). Em dado esparso, que varia de mês a mês, mais liberdade tende a memorizar ruído: o XGBoost corrige erro sobre erro e ajusta fundo (gap 0,17), e as árvores profundas do RF pré-registrado decoram o treino (gap 0,36). Por isso o RF regularizado foi testado depois, como exploração.
 
+**Hiperparâmetros testados.** Cada modelo foi treinado com várias configurações e comparado por validação cruzada temporal (2 dobras, só no treino, com expurgo). Vale a maior macro-F1 médio; o empate é decidido pelo menor erro absoluto de nível. O teste só foi aberto depois da escolha.
+
+| Modelo | Hiperparâmetros variados | Configurações | Melhor na CV (macro-F1) |
+|---|---|---|---|
+| Random Forest | `n_estimators` {100, 300}; `max_depth` {5, 10, sem limite}; `min_samples_leaf` {1, 5} | 12 | 300 árvores, sem limite de profundidade, folha ≥ 5 (0,501) |
+| XGBoost | `n_estimators` {100, 300}; `max_depth` {3, 6}; `learning_rate` {0,05; 0,1; 0,3} | 12 | 300 árvores, profundidade 3, taxa 0,05 (0,495) |
+| MLP | camadas {[32], [64], [64, 32]}; `alpha` {0,0001; 0,01}; `learning_rate_init` {0,001; 0,01} | 12 | [64, 32], alpha 0,0001, taxa 0,01 (0,498) |
+| LSTM (exploração) | `hidden_size` {16, 32, 64}; `learning_rate` {0,001; 0,01}; `dropout` {0; 0,3} | 12 | n/d |
+| KMeans + PCA (exploração) | `n_components` {2, 4, 8}; `n_clusters` {4, 8, 16}; `whiten` {não, sim} | 18 | n/d |
+| RF regularizado (exploração) | `max_depth` 6, `min_samples_leaf` 80, `max_features` 0,5, 300 árvores | 1 | fora da grade original; avaliado depois de ver o teste |
+
+O que os hiperparâmetros mostram: na CV os três modelos pré-registrados ficaram colados (0,495 a 0,501), então a escolha do Random Forest foi apertada. A mesma configuração vencedora teve o maior gap no teste (0,36). Limitar a profundidade e exigir folhas grandes (`max_depth` 6, `min_samples_leaf` 80) levou o gap a ≈ 0: nesses dados, ajustar a **liberdade** do modelo importou mais do que trocar de família de modelo. Os resultados de todas as combinações estão em `ml/dados/resultados/selecao_modelo.json` e `cv_exploracao_adicional.json`, e no MLflow (experimento 1).
+
 ## Resultados
 
 Teste ago–set/2026, n = 847. Tabela completa (custo médio, recall e precisão de risco alto) em `RELATORIO_ML.md`, seção 4.
@@ -75,7 +88,7 @@ Teste ago–set/2026, n = 847. Tabela completa (custo médio, recall e precisão
 | KMeans + PCA | 0,503 [0,467; 0,535] | −0,01 |
 | **Random Forest regularizado** (exploratório) | **0,513 [0,479; 0,546]** | ≈ 0 |
 
-- **Descoberta:** os modelos com mais liberdade de ajuste foram os mais sensíveis ao ruído do dado. Os registros são esparsos e variam de mês a mês; o RF pré-registrado sobreajusta (gap 0,36) e a regularização escolhida por CV leva o gap a ≈ 0.
+- **Descoberta (hiperparâmetros):** os modelos com mais liberdade de ajuste foram os mais sensíveis ao ruído do dado. Os registros são esparsos e variam de mês a mês; o RF pré-registrado sobreajusta (gap 0,36) e a regularização escolhida por CV leva o gap a ≈ 0.
 - A diferença pareada RF regularizado − persistência em macro-F1 é +0,022 [−0,010; 0,052]: **não ficou estabelecida**. O regularizado foi escolhido depois de ver o teste (`test_seen = true`): evidência exploratória, não prova de superioridade.
 - Calibração: ECE 0,047 sem pós-processamento; a calibração isotônica piorou para 0,105 e foi rejeitada.
 - **Decisão:** nenhum modelo superou a persistência de forma estabelecida. O que vai para o app é o **mapa observado** (média histórica por célula), determinístico e explicável, não a saída de um modelo.
@@ -133,7 +146,7 @@ Para reexecutar o notebook: `jupyter nbconvert --execute --to notebook --inplace
 
 ## Testes
 
-`pytest -q` coleta 115 testes em 20 arquivos de teste. O que garantem:
+`pytest -q` coleta 116 testes em 20 arquivos de teste. O que garantem:
 
 | Grupo | Arquivos | Garantia |
 |---|---|---|
@@ -142,7 +155,7 @@ Para reexecutar o notebook: `jupyter nbconvert --execute --to notebook --inplace
 | Contrato do snapshot | `test_snapshot`, `test_sem_dado`, `test_idempotencia`, `test_schemas_derivados` | k ≥ 3, `sem_dado` sem nível, hash reproduzível |
 | Modelagem | `test_calibracao`, `test_sequenciais`, `test_ta_descritiva`, `test_v2_historico` | métricas, backtest agregado sem célula/faixa, histórico v2 |
 
-Os testes de modelagem importam `torch` e são os mais lentos. `test_ta_descritiva` precisa de `ml/dados/processed/` (gerado pela ingestão; não versionado).
+Os testes de modelagem importam `torch` e são os mais lentos. `test_ta_descritiva` (5 testes) precisa de `ml/dados/processed/usadas_v2.parquet` (histórico 2023–2026, ver `ml/v2_historico.py`), que não é versionado. Num clone novo esses 5 dão erro de arquivo ausente; os outros 110 passam (109 passam e 1 é ignorado). Os 116 passam no ambiente de desenvolvimento, onde o arquivo existe.
 
 ## Estrutura do repositório
 
