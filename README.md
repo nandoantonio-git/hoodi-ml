@@ -49,14 +49,17 @@ SSP-SP (XLSX público) → ingestão e reconciliação → rótulo por célula H
 - Tudo o que veio depois da abertura do teste é **exploração com `test_seen = true`**: RF regularizado, LSTM, KMeans+PCA, regra de custo, histórico 2023–2025 e calibração.
 
 ### 4. Modelos testados
-| Modelo | Situação | Por que entrou |
-|---|---|---|
-| Classe mais frequente, persistência (nível da janela anterior) | base | piso e a base realista a bater |
-| Random Forest | pré-registrado | não paramétrico, robusto, explicável por importância |
-| XGBoost, MLP | pré-registrados | mais liberdade de ajuste, para medir o que ela agrega |
-| LSTM | exploração | testa estrutura sequencial no histórico |
-| KMeans + PCA | exploração | abordagem não supervisionada |
-| Random Forest regularizado (`max_depth` 6, `min_samples_leaf` 80) | exploração | limita a liberdade do RF; hiperparâmetros escolhidos por CV |
+| Modelo | Situação | Como funciona | Por que entrou |
+|---|---|---|---|
+| Classe mais frequente, persistência (nível da janela anterior) | base | repete a classe mais comum ou o nível da janela anterior | piso e a base realista a bater |
+| Random Forest | pré-registrado | muitas árvores de decisão que votam juntas | não paramétrico, robusto, explicável por importância |
+| XGBoost | pré-registrado | árvores em sequência, cada uma corrige o erro da anterior | mais liberdade de ajuste, para medir o que ela agrega |
+| MLP | pré-registrado | rede neural simples: combina todas as variáveis e aprende pesos | mais liberdade de ajuste, para medir o que ela agrega |
+| LSTM | exploração | rede para sequências: lê o histórico mês a mês e decide o que lembrar | testa estrutura sequencial no histórico |
+| KMeans + PCA | exploração | agrupa células parecidas, sem usar o rótulo | abordagem não supervisionada |
+| Random Forest regularizado (`max_depth` 6, `min_samples_leaf` 80) | exploração | o mesmo RF, com árvores rasas e folhas grandes | limita a liberdade do RF; hiperparâmetros escolhidos por CV |
+
+**Raciocínio:** a escala de liberdade vai da persistência (nenhuma) à LSTM e ao XGBoost (muita). Em dado esparso, que varia de mês a mês, mais liberdade tende a memorizar ruído: o XGBoost corrige erro sobre erro e ajusta fundo (gap 0,17), e as árvores profundas do RF pré-registrado decoram o treino (gap 0,36). Por isso o RF regularizado foi testado depois, como exploração.
 
 ## Resultados
 
