@@ -1,6 +1,6 @@
 # hoodi — módulo de Machine Learning (Global Solution CitizenTech, FIAP)
 
-> **Natureza do resultado:** mapa **histórico observado** de ocorrências registradas pela SSP-SP (contrato v3 vigente: abr–set/2026; v2, jan–set/2026, fica para rollback), por área (célula H3, resolução 9) e faixa horária. É o melhor dado disponível no período. **Não** indica risco em tempo real, **não** prevê o futuro e **não** aponta lugar seguro.
+> **Natureza do resultado:** mapa **histórico observado** de ocorrências registradas pela SSP-SP (contrato de entrega v2: jan–set/2026; o v3 semestral, abr–set/2026, é candidato aceito só para a fase 2), por área (célula H3, resolução 9) e faixa horária. É o melhor dado disponível no período. **Não** indica risco em tempo real, **não** prevê o futuro e **não** aponta lugar seguro.
 
 O hoodi é um aplicativo de apoio à decisão para quem anda a pé por São Paulo: mostra no mapa o nível de ocorrências registradas por área e horário e avisa quando a pessoa entra em uma área de nível alto. A comparação de rotas de carro é a fase 2, depois da entrega. Este repositório contém **somente o módulo de ML**: ingestão do dado público, construção do mapa de níveis, avaliação honesta de modelos e os contratos que a API e o app consomem.
 
@@ -46,8 +46,8 @@ SSP-SP (XLSX público) ──► ml/ (lote, Python) ──► snapshot CSV + sha
 
 | Entregável | Onde |
 |---|---|
-| **Snapshot v3 (vigente)**: semestral abr–set/2026, 5×5 km, k ≥ 3, SHA-256 `e33bd004…c71c0da` | `ml/dados/snapshot_v3/` |
-| Snapshot v2 (referência e rollback, jan–set/2026), SHA-256 `2dddef70…` | `ml/dados/snapshot/` |
+| **Snapshot v2 (contrato de entrega)**: jan–set/2026, 5×5 km, k ≥ 3, 954 chaves `com_dado`, SHA-256 `2dddef70…5080a` | `ml/dados/snapshot/` |
+| Snapshot v3 (candidato, fase 2): semestral abr–set/2026, 824 chaves `com_dado`, SHA-256 `e33bd004…c71c0da` | `ml/dados/snapshot_v3/` |
 | Derivados v3: política de proximidade e vetores de rota | `docs/contratos-v3/politica_proximidade_v3.json`, `vetores_rota_v3.json` |
 | Fixture de 5 linhas para testes dos consumidores | `ml/dados/snapshot/fixture_v2.json` |
 | Política de alerta de proximidade (parâmetros e casos) | `docs/contratos-v3/politica_proximidade_v2.json` |
@@ -68,7 +68,7 @@ SSP-SP (XLSX público) ──► ml/ (lote, Python) ──► snapshot CSV + sha
 - **Rótulo:** `pontuacao_mensal` = soma dos pesos ÷ 9 meses ÷ horas da faixa; `nivel` 0–3 pelos três cortes de quartil calculados **só no treino**.
 - **O dado bruto não está no Git.** Apenas agregados por célula e faixa são versionados.
 
-> **Contrato vigente: v3** (`ml/dados/snapshot_v3/`). O texto abaixo descreve o formato, idêntico em v2 e v3; os números (1.395 chaves, 954/441) são do v2. No v3: 1.395 chaves, 824 `com_dado` e 571 `sem_dado`.
+> **Contrato de entrega: v2** (`ml/dados/snapshot/`, 1.395 chaves, 954 `com_dado` e 441 `sem_dado`). O v3 (`ml/dados/snapshot_v3/`: 824 `com_dado` e 571 `sem_dado`) tem o mesmo formato, é aceito pelo decoder só para a fase 2 e não foi adotado: o ganho de estabilidade não justificou trocar o padrão, e a janela foi escolhida em teste exploratório já visto.
 
 ## Contrato do snapshot (formato v2/v3)
 
